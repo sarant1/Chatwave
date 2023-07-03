@@ -1,8 +1,8 @@
 'use client'
-import { useAuth } from "@/hooks/useAuth.hook";
+import { useCheckAuth } from "@/hooks/useCheckAuth.hook";
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user } = useCheckAuth();
 
   console.log("we're in dashboard:", user);
 

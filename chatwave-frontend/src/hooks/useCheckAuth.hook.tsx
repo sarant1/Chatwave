@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react'
 import { Hub } from 'aws-amplify'
 import { useRouter } from 'next/navigation'
-import { getAuthenticatedUser } from '@/services/auth'
 import { User } from '@/contexts/auth.context'
+import { Auth } from 'aws-amplify'
+import amplifyConfigure from '@/utils/configure-amplify'
 
 interface CurrentUser {
     attributes: {
@@ -16,7 +17,7 @@ interface CurrentUser {
       };
     };
   }
-
+amplifyConfigure();
 
 export const useCheckAuth = () => {
     const router = useRouter();
@@ -41,17 +42,13 @@ export const useCheckAuth = () => {
           }
         });
     
-        getAuthenticatedUser()
+        Auth.currentAuthenticatedUser()
           .then((currentUser: CurrentUser) => {
             const email = currentUser.attributes.email;
             const accessToken = currentUser.signInUserSession.accessToken.jwtToken;
             setUser({ email, accessToken });
           })
-          .then(() => {
-            router.replace('/dashboard')
-            console.log("Signed in")
-          })
-          .catch(() => {
+          .catch((err) => {
             router.replace('/login')
             console.log("Not signed in")
           });

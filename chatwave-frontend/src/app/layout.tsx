@@ -5,7 +5,7 @@ dotenv.config();
 
 import { Inter } from "next/font/google";
 
-import { Providers } from "@/providers/providers";
+import { AppChakraProvider } from "@/providers/chakra.provider";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <AppChakraProvider>{children}</AppChakraProvider>
       </body>
     </html>
   );

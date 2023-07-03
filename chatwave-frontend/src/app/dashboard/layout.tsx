@@ -38,6 +38,7 @@ import { ReactText } from 'react';
 
 import { LuMessagesSquare } from 'react-icons/lu'
 import { useCheckAuth } from '@/hooks/useCheckAuth.hook';
+import { useAuth } from '@/hooks/useAuth.hook';
 
 interface LinkItemProps {
   name: string;
@@ -93,7 +94,8 @@ interface SidebarProps extends BoxProps {
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 
-  const { user, logOut } = useAuth();
+  const { logOut } = useAuth();
+  const { user }  = useCheckAuth();1
   
   const handleLogOut = async () => {
     await logOut();
@@ -270,6 +272,8 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   );
 };
 
+import { AuthProvider } from '@/providers/auth.provider';
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   
   const { user } = useCheckAuth();
@@ -279,9 +283,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {!user ? (
         <div>loading...</div>
         ) : (
-        <SidebarWithHeader>
-          {children}
-        </SidebarWithHeader>
+          <AuthProvider>
+            <SidebarWithHeader>
+              {children}
+            </SidebarWithHeader>
+          </AuthProvider>
       )}
     </div>
   )

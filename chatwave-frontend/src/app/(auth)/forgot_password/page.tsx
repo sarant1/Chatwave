@@ -31,18 +31,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { forgotPassword } from "@/services/auth/forgotPassword";
 import { ForgotPasswordProps, ForgotPasswordSchema } from "@/utils/validators/forgotPassword.validator";
-import { LoginSchema } from "@/utils/validators/login.validator";
 
-import { Amplify } from "aws-amplify";
-import awsExports from "@/utils/aws-exports";
+import amplifyConfigure from "@/utils/configure-amplify";
 
-// Configure Amplify in index file or root file
-try {
-  Amplify.configure(awsExports);
-  console.log("Amplify Configured!");
-} catch (error) {
-  console.log("Error setting up Amplify");
-}
+// run in every auth page
+amplifyConfigure();
 
 import { ErrorManager, ErrorResponse } from "@/utils/exceptions/errorManager";
 
@@ -109,7 +102,7 @@ export default function ForgotPasswordPage() {
             });
 
             setTimeout(() => {
-              router.push(`/auth/verify?email=${data.email}`);
+              router.push(`/verify?email=${data.email}`);
             }, 4000);
           }, 6000);
         }
@@ -175,7 +168,7 @@ export default function ForgotPasswordPage() {
           </Box>
 
           <Text fontSize={"lg"} color={"gray.600"} textAlign="center">
-            Did not get a reset link? <Link color={"blue.400"} href='/auth/signup'>Resend link</Link>
+            Did not get a reset link? <Link color={"blue.400"} href='/signup'>Resend link</Link>
           </Text>
         </Stack>
       </Flex>

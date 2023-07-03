@@ -22,32 +22,31 @@ import { FormEventHandler, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
 import NextLink from 'next/link';
-
-import { Cache } from 'aws-amplify';
-
 type FormData = {
   email: string;
   password: string;
 };
 
-import { Auth } from 'aws-amplify';
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { logIn } from "@/services/auth/logIn";
 import { LoginProps } from "@/utils/validators/login.validator";
 import { LoginSchema } from "@/utils/validators/login.validator";
-import { useEffect } from "react";
-import awsExports from "@/utils/aws-exports";
-
+import { useCheckAuth } from "@/hooks/useCheckAuth.hook"
+ 
 import { ErrorManager, ErrorResponse } from "@/utils/exceptions/errorManager";
 
-Auth.configure(awsExports)
+import amplifyConfigure from "@/utils/configure-amplify";
 
+// run in every auth page
+amplifyConfigure();
 
 export default function Signin() {
 
   const router = useRouter();
   const toast = useToast();
+
+  const { user } = useCheckAuth();
 
   const {
     register,
@@ -217,7 +216,7 @@ export default function Signin() {
           </Box>
 
           <Text fontSize={"lg"} color={"gray.600"} textAlign="center">
-            Not registered yet? <Link color={"blue.400"} href='/auth/signup'>Sign Up</Link>
+            Not registered yet? <Link color={"blue.400"} href='/signup'>Sign Up</Link>
           </Text>
         </Stack>
       </Flex>

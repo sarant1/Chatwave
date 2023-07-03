@@ -13,16 +13,15 @@ import {
   Text
 } from '@chakra-ui/react';
 
-import NextLink from 'next/link';
-
 import { PinInput, PinInputField } from '@chakra-ui/react';
 import { useState } from "react" 
 import { useSearchParams } from 'next/navigation';
 import { confirmSignUp } from '@/services/auth/confirmSignUp';
-import { Amplify } from 'aws-amplify';
-import awsExports from '@/utils/aws-exports'
 
-Amplify.configure(awsExports)
+import amplifyConfigure from "@/utils/configure-amplify";
+
+// run in every auth page
+amplifyConfigure();
 
 import { 
   SignUpVerificationSchema 
@@ -71,7 +70,7 @@ export default function VerifyEmailForm(): JSX.Element {
     try {
       const verificationData = SignUpVerificationSchema.parse(data);
       await confirmSignUp(verificationData);
-      router.push('/auth/login'); 
+      router.push('/login'); 
 
     } catch (err) {
       if (err instanceof ZodError) {

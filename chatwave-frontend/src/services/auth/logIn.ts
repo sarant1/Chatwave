@@ -2,11 +2,9 @@
 
 import { Auth } from 'aws-amplify';
 
-import { LoginProps } from '@/utils/validators/login.validator';
-
-export type LoginResultProps = {
-  isEmailVerified: boolean; 
-  userId: string;
+export type LoginProps = {
+  email: string; 
+  password: string;
 };
 
 export async function logIn({ email, password }: LoginProps) {

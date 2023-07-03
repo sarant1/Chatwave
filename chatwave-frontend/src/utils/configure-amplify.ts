@@ -1,4 +1,6 @@
 // replace the user pool region, id, and app client id details
+import { Amplify } from 'aws-amplify';
+
 const awsExports = {
   aws_project_region: process.env.NEXT_PUBLIC_AWS_REGION, // amplify
   aws_cognito_region: process.env.NEXT_PUBLIC_AWS_REGION,
@@ -7,4 +9,13 @@ const awsExports = {
   oauth: {},
 };
 
-export default awsExports;
+const amplifyConfigure = () => {
+  try {
+    Amplify.configure(awsExports);
+    console.log("Amplify Configured!");
+  } catch (error) {
+    console.log("Error setting up Amplify");
+  }
+}
+
+export default amplifyConfigure;

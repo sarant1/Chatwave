@@ -19,17 +19,10 @@ interface CurrentUser {
 
 
 export const useCheckAuth = () => {
-    const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
-        /*
-          payload: {
-            event: 'signIn' | 'signOut' | others
-            data: Cognito Object
-          }
-        */
-      
         const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
           switch (event) {
             case "signIn":
@@ -53,6 +46,10 @@ export const useCheckAuth = () => {
             const email = currentUser.attributes.email;
             const accessToken = currentUser.signInUserSession.accessToken.jwtToken;
             setUser({ email, accessToken });
+          })
+          .then(() => {
+            router.replace('/dashboard')
+            console.log("Signed in")
           })
           .catch(() => {
             router.replace('/login')

@@ -35,18 +35,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@/services/auth/signUp";
 import type { SignUpProps } from "@/services/auth/signUp";
 
-import { Amplify } from "aws-amplify";
-import awsExports from "@/utils/aws-exports";
+import amplifyConfigure from "@/utils/configure-amplify";
 
-console.log('awsExports:', awsExports);
-
-// // Configure Amplify in index file or root file
-// try {
-//   Amplify.configure(awsExports);
-//   console.log("Amplify Configured!");
-// } catch (error) {
-//   console.log("Error setting up Amplify");
-// }
+// run in every auth page
+amplifyConfigure();
 
 export default function Signup() {
 
@@ -82,7 +74,7 @@ export default function Signup() {
         });
 
         setTimeout(() => {
-          router.push(`/auth/verify?email=${signUpData.email}`);
+          router.push(`/verify?email=${signUpData.email}`);
         }, 5000);
       }, 4000);
       

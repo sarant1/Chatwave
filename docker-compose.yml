@@ -1,8 +1,8 @@
 version: "3.8"
 services:
   chatwave-backend:
-    #env_file:
-    #  - backend-flaskx.env
+    env_file:
+      backend-django.env
     build: ./chatwave-backend
     ports:
       - "8080:8080"

@@ -56,8 +56,11 @@ yarn.lock
 .env
 *.env
 
-
 path/*
 path
 __pycache__
 __pycache__/*
+
+
+docker/*
+docker

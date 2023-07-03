@@ -84,7 +84,7 @@ export default function WithSubnavigation() {
             variant={'link'}
             href={'/auth/login'}
           >
-            Log in
+            Sign In
           </Button>
           <Button
             as={NextLink}

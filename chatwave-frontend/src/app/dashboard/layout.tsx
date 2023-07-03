@@ -37,8 +37,7 @@ import { IconType } from 'react-icons';
 import { ReactText } from 'react';
 
 import { LuMessagesSquare } from 'react-icons/lu'
-import { useAuth } from '@/hooks/useAuth.hook';
-import { User } from '@/contexts/auth.context';
+import { useCheckAuth } from '@/hooks/useCheckAuth.hook';
 
 interface LinkItemProps {
   name: string;
@@ -273,7 +272,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   
-  const { user } = useAuth();
+  const { user } = useCheckAuth();
 
   return (
     <div>

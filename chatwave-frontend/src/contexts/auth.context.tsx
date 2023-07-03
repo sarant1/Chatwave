@@ -8,7 +8,6 @@ export interface User {
 }
 
 export interface IAuthContext {
-  user: User | null;
   signUp: (p: { email: string; password: string; }) => Promise<any>;
   logIn: (p: { email: string; password: string }) => Promise<any>;
   confirmSignUp: (p: { email: string; verificationCode: string; }) => Promise<any>;
@@ -16,7 +15,6 @@ export interface IAuthContext {
 };
 
 const defaultAuthContext: IAuthContext = {
-  user: null,
   signUp: async () => {},
   logIn: async () => {},
   logOut: async () => {},

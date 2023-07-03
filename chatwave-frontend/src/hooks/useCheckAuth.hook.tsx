@@ -55,7 +55,7 @@ export const useCheckAuth = () => {
             setUser({ email, accessToken });
           })
           .catch(() => {
-            router.replace('/auth/login')
+            router.replace('/login')
             console.log("Not signed in")
           });
     

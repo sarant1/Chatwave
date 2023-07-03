@@ -37,10 +37,11 @@ import { logIn } from "@/services/auth/logIn";
 import { LoginProps } from "@/utils/validators/login.validator";
 import { LoginSchema } from "@/utils/validators/login.validator";
 import { useEffect } from "react";
-
+import awsExports from "@/utils/aws-exports";
 
 import { ErrorManager, ErrorResponse } from "@/utils/exceptions/errorManager";
 
+Auth.configure(awsExports)
 
 
 export default function Signin() {
@@ -167,7 +168,7 @@ export default function Signin() {
                     <Link 
                       as={NextLink} 
                       color={"blue.400"}
-                      href={'/auth/forgot_password'}
+                      href={'/forgot_password'}
                     >
                       Forgot password?
                     </Link>

@@ -81,7 +81,7 @@ class DynamoDB():
         formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
         return self.client.put_item(Item={
             'pk': {'S': f'ROOM#{room}' },
-            'sk': {'S': f'MESSAGE#{formatted_date}'},
+            'sk': {'S': f'MSG#{formatted_date}'},
             'message': {'S': message },
             'username': {'S': username}
             },
@@ -95,7 +95,7 @@ class DynamoDB():
             KeyConditionExpression='pk = :pk AND begins_with(sk, :sk)',
             ExpressionAttributeValues={
                 ':pk': {'S': f'ROOM#{room}'},
-                ':sk': {'S': 'MESSAGE#'}
+                ':sk': {'S': 'MSG#'}
             }
         )
   

@@ -71,6 +71,34 @@ def room(request):
             return JsonResponse(response_data, status=400, content_type='application/json')
     else:
         return JsonResponse({'message': 'Invalid Request'}, status=400, content_type='application/json')
+
+@require_http_methods(["POST", "GET"])
+def messages(request):
+    if request.method == "POST":
+        try:
+            body = json.loads(request.body)
+            email = body['email']
+            message = body['message']
+            room = body['room']
+            data = dynamodb.create_message(room, message, email)
+            return JsonResponse(data, status=200, content_type='application/json', safe=False)
+        except Exception as e:
+            print(red + str(e) + reset, flush=True)
+            response_data = {'message': 'Failed to create message'}
+            return JsonResponse(response_data, status=400, content_type='application/json')
+    elif request.method == "GET":
+        try:
+            body = json.loads(request.body)
+            room = body['room']
+            data = dynamodb.get_messages(room)
+            return JsonResponse(data, status=200, content_type='application/json', safe=False)
+        except Exception as e:
+            print(red + str(e) + reset, flush=True)
+            response_data = {'message': 'Failed to Find Messages'}
+            return JsonResponse(response_data, status=400, content_type='application/json')
+    else:
+        return JsonResponse({'message': 'Invalid Request'}, status=400, content_type='application/json')
+
     
 
 

@@ -1,5 +1,7 @@
 import boto3
 from uuid import uuid4
+from datetime import datetime
+
 
 red = '\033[91m'
 reset = '\033[0m'
@@ -71,6 +73,29 @@ class DynamoDB():
             ExpressionAttributeValues={
                 ':pk': {'S': f'USER#{username}'},
                 ':sk': {'S': 'ROOM#'}
+            }
+        )
+    
+    def create_message(self, room, message, username):
+        now = datetime.now()
+        formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+        return self.client.put_item(Item={
+            'pk': {'S': f'ROOM#{room}' },
+            'sk': {'S': f'MESSAGE#{formatted_date}'},
+            'message': {'S': message },
+            'username': {'S': username}
+            },
+            ReturnValues='NONE',
+            TableName=self.table
+            )
+
+    def get_messages(self, room):
+        return self.client.query(
+            TableName=self.table,
+            KeyConditionExpression='pk = :pk AND begins_with(sk, :sk)',
+            ExpressionAttributeValues={
+                ':pk': {'S': f'ROOM#{room}'},
+                ':sk': {'S': 'MESSAGE#'}
             }
         )
   

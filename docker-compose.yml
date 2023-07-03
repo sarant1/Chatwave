@@ -2,7 +2,7 @@ version: "3.8"
 services:
   chatwave-backend:
     env_file:
-      backend-django.env
+      .envbackend-django.env
     build: ./chatwave-backend
     ports:
       - "8080:8080"
@@ -12,8 +12,8 @@ services:
       - ./chatwave-backend:/chatwave-backend
 
   chatwave-frontend:
-    #env_file:
-    #  - frontend-react-jsx.env
+    env_file:
+      - .envfrontend-nextjs.env
     build: ./chatwave-frontend
     ports:
       - "3000:3000"

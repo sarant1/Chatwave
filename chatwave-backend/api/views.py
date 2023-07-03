@@ -17,13 +17,6 @@ dynamodb = DynamoDB()
 def index(request):
     return JsonResponse("Hello, world. You're at the polls index.")
 
-@require_http_methods(["POST"])
-def chat(request):
-    data = {'message': 'Hello, world!'}
-    json_data = json.dumps(data)
-    print(request.body)
-    return JsonResponse(json_data, status=200, content_type='application/json')
-
 @require_http_methods(["POST", "GET"])
 def user(request):
     if request.method == 'POST':
@@ -50,3 +43,35 @@ def user(request):
             return JsonResponse(response_data, status=400, content_type='application/json')
     else:
         return JsonResponse({'message': 'Invalid Request'}, status=400, content_type='application/json')
+
+@require_http_methods(["POST", "GET"])
+def room(request):
+    if request.method == 'POST':
+        try:
+            body = json.loads(request.body)
+            user1 = body['user1']
+            user2 = body['user2']
+            dynamodb.create_room(user1, user2)
+            response_data = {'message': 'Room Created'}
+            return JsonResponse(response_data, status=200, content_type='application/json')
+        
+        except Exception as e:
+            print(red + str(e) + reset, flush=True)
+            response_data = {'message': 'Failed to Create Room'}
+            return JsonResponse(response_data, status=400, content_type='application/json')
+    elif request.method == 'GET':
+        try:
+            body = json.loads(request.body)
+            email = body['email']
+            data = dynamodb.get_rooms(email)
+            return JsonResponse(data, status=200, content_type='application/json', safe=False)
+        except Exception as e:
+            print(red + str(e) + reset, flush=True)
+            response_data = {'message': 'Failed to Find Rooms'}
+            return JsonResponse(response_data, status=400, content_type='application/json')
+    else:
+        return JsonResponse({'message': 'Invalid Request'}, status=400, content_type='application/json')
+    
+
+
+

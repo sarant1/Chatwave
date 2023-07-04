@@ -1,0 +1,28 @@
+{
+    "Items": [
+        {
+            "pk": {
+                "S": "USER#sam@gmail.com"
+            },
+            "sk": {
+                "S": "ROOM#6d7e267c-9986-43b8-9f2f-b994307a29c4"
+            }
+        }
+    ],
+    "Count": 1,
+    "ScannedCount": 1,
+    "ResponseMetadata": {
+        "RequestId": "65Q11P1BG88O6A90C7VT0SNIM3VV4KQNSO5AEMVJF66Q9ASUAAJG",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "server": "Server",
+            "date": "Mon, 03 Jul 2023 20:45:36 GMT",
+            "content-type": "application/x-amz-json-1.0",
+            "content-length": "127",
+            "connection": "keep-alive",
+            "x-amzn-requestid": "65Q11P1BG88O6A90C7VT0SNIM3VV4KQNSO5AEMVJF66Q9ASUAAJG",
+            "x-amz-crc32": "3110810134"
+        },
+        "RetryAttempts": 0
+    }
+}

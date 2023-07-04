@@ -1,6 +1,6 @@
 "use client";
 
-import WithNavigation from "@/components/navbar";
+import WithNavigation from "@/components/Navbar";
 
 export default function Home() {
 

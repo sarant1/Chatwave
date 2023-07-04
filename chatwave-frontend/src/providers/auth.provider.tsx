@@ -15,15 +15,14 @@ export type AuthProviderProps = {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  
-  const { user } = useCheckAuth()
+  const { user } = useCheckAuth();
 
   const value = {
     confirmSignUp,
     logIn,
     logOut,
     signUp,
-    user
+    user,
   }; 
 
   return (
@@ -31,7 +30,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       {children}
     </AuthContext.Provider>
   )
-
 }
 
 

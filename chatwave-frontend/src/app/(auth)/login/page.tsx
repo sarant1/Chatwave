@@ -47,6 +47,10 @@ export default function Signin() {
 
   const { user } = useCheckAuth();
 
+  if (user) {
+    router.replace("/dashboard");
+  }
+
   const {
     register,
     handleSubmit,

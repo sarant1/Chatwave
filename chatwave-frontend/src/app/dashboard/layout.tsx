@@ -49,12 +49,16 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Settings", icon: FiSettings },
 ];
 
+import { useCheckAuth } from "@/hooks/useCheckAuth.hook";
+
 export default function SidebarWithHeader({
   children,
 }: {
   children: ReactNode;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user } = useCheckAuth();
+
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <SidebarContent
@@ -76,9 +80,7 @@ export default function SidebarWithHeader({
       </Drawer>
       {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p="4">
-        {children}
-      </Box>
+      <Box ml={{ base: 0, md: 60 }}>{children}</Box>
     </Box>
   );
 }

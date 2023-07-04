@@ -3,7 +3,7 @@ import RoomsList from "@/components/RoomsList";
 
 const RoomsPage = () => {
   return (
-    <div>
+    <div className="p-0">
       <RoomsList />
     </div>
   );

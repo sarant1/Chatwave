@@ -49,7 +49,9 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Settings", icon: FiSettings },
 ];
 
-import { useCheckAuth } from "@/hooks/useCheckAuth.hook";
+import { useAuth } from "@/hooks/useAuth";
+import { useContext } from "react";
+import { AuthContext } from "@/contexts/auth.context";
 
 export default function SidebarWithHeader({
   children,
@@ -57,7 +59,8 @@ export default function SidebarWithHeader({
   children: ReactNode;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user } = useCheckAuth();
+
+  useAuth();
 
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
@@ -156,10 +159,17 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
   );
 };
 
+import { logOut } from "@/services/auth/logOut";
+
 interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+  const handleLogOut = async () => {
+    await logOut();
+    console.log("logout");
+  };
+
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -234,7 +244,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
               <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem onClick={handleLogOut}>Sign out</MenuItem>
             </MenuList>
           </Menu>
         </Flex>

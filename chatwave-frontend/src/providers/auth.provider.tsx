@@ -1,23 +1,19 @@
 "use client";
 
-import { confirmSignUp, logIn, signUp, logOut } from "@/services/auth";
-
 import { AuthContext } from "@/contexts/auth.context";
-import { useCheckAuth } from "@/hooks/useCheckAuth.hook";
+import { useState } from "react";
+import { User } from "@/contexts/auth.context";
 
 export type AuthProviderProps = {
   children: React.ReactNode;
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const { user } = useCheckAuth();
+  const [user, setUser] = useState<User | null>(null);
 
   const value = {
-    confirmSignUp,
-    logIn,
-    logOut,
-    signUp,
     user,
+    setUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

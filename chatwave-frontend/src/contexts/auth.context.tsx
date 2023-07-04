@@ -6,20 +6,13 @@ export interface User {
 }
 
 export interface IAuthContext {
-  signUp: (p: { email: string; password: string }) => Promise<any>;
-  logIn: (p: { email: string; password: string }) => Promise<any>;
-  confirmSignUp: (p: {
-    email: string;
-    verificationCode: string;
-  }) => Promise<any>;
-  logOut: () => Promise<any>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const defaultAuthContext: IAuthContext = {
-  signUp: async () => {},
-  logIn: async () => {},
-  logOut: async () => {},
-  confirmSignUp: async () => {},
+  user: null,
+  setUser: () => {},
 };
 
 export const AuthContext = createContext<IAuthContext>(defaultAuthContext);

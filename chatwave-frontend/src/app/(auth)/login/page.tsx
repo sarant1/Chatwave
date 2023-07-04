@@ -32,7 +32,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { logIn } from "@/services/auth/logIn";
 import { LoginProps } from "@/utils/validators/login.validator";
 import { LoginSchema } from "@/utils/validators/login.validator";
-import { useCheckAuth } from "@/hooks/useCheckAuth.hook";
+import { useAuth } from "@/hooks/useAuth";
+import { AuthContext } from "@/contexts/auth.context";
+import { useContext } from "react";
 
 import { ErrorManager, ErrorResponse } from "@/utils/exceptions/errorManager";
 
@@ -45,11 +47,7 @@ export default function Signin() {
   const router = useRouter();
   const toast = useToast();
 
-  const { user } = useCheckAuth();
-
-  if (user) {
-    router.replace("/dashboard");
-  }
+  useAuth();
 
   const {
     register,

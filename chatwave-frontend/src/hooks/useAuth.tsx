@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Hub } from "aws-amplify";
-import { useRouter } from "next/navigation";
-import { User } from "@/contexts/auth.context";
+import { useRouter, usePathname } from "next/navigation";
 import { Auth } from "aws-amplify";
 import amplifyConfigure from "@/utils/configure-amplify";
+import { AuthContext } from "@/contexts/auth.context";
+import { useContext } from "react";
 
 interface CurrentUser {
   attributes: {
@@ -19,21 +20,22 @@ interface CurrentUser {
 }
 amplifyConfigure();
 
-export const useCheckAuth = () => {
+export const useAuth = () => {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const pathname = usePathname();
+  const { user, setUser } = useContext(AuthContext);
 
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
       switch (event) {
         case "signIn":
           setUser({
-            // name: "",
-            // occupation: "",
             email: data.signInUserSession.idToken.payload.email,
             accessToken: data.signInUserSession.accessToken.jwtToken,
           });
-          router.replace("/dashboard");
+          if (pathname === "/login") {
+            router.replace("/dashboard");
+          }
           break;
         case "signOut":
           setUser(null);
@@ -47,12 +49,15 @@ export const useCheckAuth = () => {
         const email = currentUser.attributes.email;
         const accessToken = currentUser.signInUserSession.accessToken.jwtToken;
         setUser({ email, accessToken });
+        if (pathname === "/login") {
+          router.replace("/dashboard");
+        }
       })
       .catch((err) => {
         router.replace("/login");
-        console.log("Not signed in");
+        console.log("Not signed in", err);
       });
-
+    console.log("AUTH CHECKED", user);
     return unsubscribe;
   }, []);
 

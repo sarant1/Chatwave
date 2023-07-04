@@ -30,8 +30,9 @@ class DynamoDB():
         TableName=self.table
         )
     
-    def create_room(self, user1, user2):
+    def create_room(self, user1, user2, message):
         uuid = uuid4()
+        self.create_message(uuid, message, user1)
         return self.client.batch_write_item(
             RequestItems={
                 self.table: [

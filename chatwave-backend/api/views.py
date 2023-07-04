@@ -51,7 +51,8 @@ def room(request):
             body = json.loads(request.body)
             user1 = body['user1']
             user2 = body['user2']
-            dynamodb.create_room(user1, user2)
+            message = body['message']
+            dynamodb.create_room(user1, user2, message)
             response_data = {'message': 'Room Created'}
             return JsonResponse(response_data, status=200, content_type='application/json')
         

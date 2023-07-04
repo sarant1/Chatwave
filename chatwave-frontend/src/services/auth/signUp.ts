@@ -21,10 +21,9 @@ export async function signUp({ email, password }: SignUpProps) {
         enabled: true,
       },
     });
-    
   } catch (err) {
     if (err instanceof Error) {
-      console.log("ERROR", err)
+      console.log("ERROR", err);
       throw err;
     }
   }

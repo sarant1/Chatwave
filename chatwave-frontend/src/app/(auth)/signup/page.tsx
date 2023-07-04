@@ -14,13 +14,13 @@ import {
   Text,
   useColorModeValue,
   Divider,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 
 import { FormEventHandler, useState } from "react";
 
 import { useForm } from "react-hook-form";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 import { ErrorManager, ErrorResponse } from "@/utils/exceptions/errorManager";
 
@@ -41,61 +41,64 @@ import amplifyConfigure from "@/utils/configure-amplify";
 amplifyConfigure();
 
 export default function Signup() {
-
   const router = useRouter();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ErrorResponse>({});
 
-  const { register, handleSubmit, formState: { errors }} = useForm<FormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(SignUpSchema),
   });
 
-  const onSubmit: FormEventHandler<HTMLFormElement> = handleSubmit(async (data) => {
-    setIsLoading(true);
-    
-    const signUpData: SignUpProps = {
-      email: data.email,
-      password: data.password,
-    };
+  const onSubmit: FormEventHandler<HTMLFormElement> = handleSubmit(
+    async (data) => {
+      setIsLoading(true);
 
-    try {
-      await signUp(signUpData);
+      const signUpData: SignUpProps = {
+        email: data.email,
+        password: data.password,
+      };
 
-      setIsLoading(false);
-      setTimeout(() => {
-        toast({
-          title: "Redirection Notice",
-          description: "Please verify your email",
-          status: 'warning',
-          position: 'top',
-          duration: 3000,
-          isClosable: true,
-        });
+      try {
+        await signUp(signUpData);
 
-        setTimeout(() => {
-          router.push(`/verify?email=${signUpData.email}`);
-        }, 5000);
-      }, 4000);
-      
-
-    } catch (err) {
-      if (err instanceof Error) {
         setIsLoading(false);
-        const errorResponse: ErrorResponse = ErrorManager.handle(err);
-        setError(errorResponse);
+        setTimeout(() => {
+          toast({
+            title: "Redirection Notice",
+            description: "Please verify your email",
+            status: "warning",
+            position: "top",
+            duration: 3000,
+            isClosable: true,
+          });
 
-        toast({
-          title: errorResponse.title,
-          description: errorResponse.message,
-          status: 'error',
-          position: 'top',
-          duration: 5000,
-          isClosable: true,
-        });
+          setTimeout(() => {
+            router.push(`/verify?email=${signUpData.email}`);
+          }, 5000);
+        }, 4000);
+      } catch (err) {
+        if (err instanceof Error) {
+          setIsLoading(false);
+          const errorResponse: ErrorResponse = ErrorManager.handle(err);
+          setError(errorResponse);
+
+          toast({
+            title: errorResponse.title,
+            description: errorResponse.message,
+            status: "error",
+            position: "top",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
       }
     }
-  });
+  );
 
   return (
     <>

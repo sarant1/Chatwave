@@ -14,14 +14,14 @@ import {
   Text,
   useColorModeValue,
   Divider,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 
 import { FormEventHandler, useState } from "react";
 
 import { useForm } from "react-hook-form";
-import { useRouter } from 'next/navigation';
-import NextLink from 'next/link';
+import { useRouter } from "next/navigation";
+import NextLink from "next/link";
 type FormData = {
   email: string;
   password: string;
@@ -32,8 +32,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { logIn } from "@/services/auth/logIn";
 import { LoginProps } from "@/utils/validators/login.validator";
 import { LoginSchema } from "@/utils/validators/login.validator";
-import { useCheckAuth } from "@/hooks/useCheckAuth.hook"
- 
+import { useCheckAuth } from "@/hooks/useCheckAuth.hook";
+
 import { ErrorManager, ErrorResponse } from "@/utils/exceptions/errorManager";
 
 import amplifyConfigure from "@/utils/configure-amplify";
@@ -42,7 +42,6 @@ import amplifyConfigure from "@/utils/configure-amplify";
 amplifyConfigure();
 
 export default function Signin() {
-
   const router = useRouter();
   const toast = useToast();
 
@@ -59,59 +58,61 @@ export default function Signin() {
   const [error, setError] = useState<ErrorResponse>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit: FormEventHandler<HTMLFormElement> = handleSubmit(async (data) => {
-    setIsLoading(true)
-    try {
-      const signUpData: LoginProps = {
-        email: data.email,
-        password: data.password,
-      };
+  const onSubmit: FormEventHandler<HTMLFormElement> = handleSubmit(
+    async (data) => {
+      setIsLoading(true);
+      try {
+        const signUpData: LoginProps = {
+          email: data.email,
+          password: data.password,
+        };
 
-      await logIn(signUpData);
-
-      toast({
-        title: "Logged in",
-        description: "You've been successfully logged in",
-        status: 'success',
-        position: 'top',
-        duration: 4000,
-        isClosable: true,
-      });
-
-    } catch (err) {
-      if (err instanceof Error) {
-        setIsLoading(false);
-        const errorResponse: ErrorResponse = ErrorManager.handle(err);
-        setError(errorResponse);
+        await logIn(signUpData);
 
         toast({
-          title: errorResponse.title,
-          description: errorResponse.message,
-          status: 'error',
-          position: 'top',
-          duration: 5000,
+          title: "Logged in",
+          description: "You've been successfully logged in",
+          status: "success",
+          position: "top",
+          duration: 4000,
           isClosable: true,
         });
+      } catch (err) {
+        if (err instanceof Error) {
+          setIsLoading(false);
+          const errorResponse: ErrorResponse = ErrorManager.handle(err);
+          setError(errorResponse);
 
-        if (errorResponse.title === 'User is not confirmed') {
-          setTimeout(() => {
-            toast({
-              title: "Redirection Notice",
-              description: "You're about to be redirected to the code verification page",
-              status: 'warning',
-              position: 'top',
-              duration: 4000,
-              isClosable: true,
-            });
+          toast({
+            title: errorResponse.title,
+            description: errorResponse.message,
+            status: "error",
+            position: "top",
+            duration: 5000,
+            isClosable: true,
+          });
 
+          if (errorResponse.title === "User is not confirmed") {
             setTimeout(() => {
-              router.push(`/auth/verify?email=${data.email}`);
-            }, 4000);
-          }, 6000);
+              toast({
+                title: "Redirection Notice",
+                description:
+                  "You're about to be redirected to the code verification page",
+                status: "warning",
+                position: "top",
+                duration: 4000,
+                isClosable: true,
+              });
+
+              setTimeout(() => {
+                router.push(`/auth/verify?email=${data.email}`);
+              }, 4000);
+            }, 6000);
+          }
         }
       }
-    } 
-  });
+    }
+  );
 
   return (
     <>
@@ -164,10 +165,10 @@ export default function Signin() {
                     align={"start"}
                     justify={"space-between"}
                   >
-                    <Link 
-                      as={NextLink} 
+                    <Link
+                      as={NextLink}
                       color={"blue.400"}
-                      href={'/forgot_password'}
+                      href={"/forgot_password"}
                     >
                       Forgot password?
                     </Link>
@@ -216,7 +217,10 @@ export default function Signin() {
           </Box>
 
           <Text fontSize={"lg"} color={"gray.600"} textAlign="center">
-            Not registered yet? <Link color={"blue.400"} href='/signup'>Sign Up</Link>
+            Not registered yet?{" "}
+            <Link color={"blue.400"} href="/signup">
+              Sign Up
+            </Link>
           </Text>
         </Stack>
       </Flex>

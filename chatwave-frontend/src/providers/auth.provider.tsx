@@ -1,18 +1,13 @@
-'use client'
+"use client";
 
-import {
-  confirmSignUp,
-  logIn,
-  signUp,
-  logOut,
-} from "@/services/auth";
+import { confirmSignUp, logIn, signUp, logOut } from "@/services/auth";
 
 import { AuthContext } from "@/contexts/auth.context";
 import { useCheckAuth } from "@/hooks/useCheckAuth.hook";
 
 export type AuthProviderProps = {
-  children: React.ReactNode
-}
+  children: React.ReactNode;
+};
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { user } = useCheckAuth();
@@ -23,15 +18,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     logOut,
     signUp,
     user,
-  }; 
+  };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  )
-}
-
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
 
 // {
 //     "username": "319c0e2c-1e25-45e5-b3f4-7ac06a8e75a9",

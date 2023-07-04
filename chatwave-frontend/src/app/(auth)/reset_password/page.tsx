@@ -14,14 +14,14 @@ import {
   Text,
   useColorModeValue,
   Divider,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 
 import { FormEvent, FormEventHandler, useState } from "react";
 
 import { useForm } from "react-hook-form";
-import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation'
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 type FormData = {
   newPassword: string;
@@ -30,11 +30,11 @@ type FormData = {
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { 
-  ResetPasswordProps, 
+import {
+  ResetPasswordProps,
   ResetPasswordSchema,
-  ResetPasswordSupportingDataProps
-} from '@/utils/validators/resetPassword.validator';
+  ResetPasswordSupportingDataProps,
+} from "@/utils/validators/resetPassword.validator";
 
 import amplifyConfigure from "@/utils/configure-amplify";
 
@@ -45,16 +45,13 @@ import { ErrorManager, ErrorResponse } from "@/utils/exceptions/errorManager";
 
 import { resetPassword } from "@/services/auth/resetPassword";
 
-
 export default function ResetPasswordPage() {
-
   const router = useRouter();
   const toast = useToast();
 
   const searchParams = useSearchParams();
-  const verificationCode = searchParams.get('verificationCode') ?? '';
-  const email = searchParams.get('email') ?? '';
-
+  const verificationCode = searchParams.get("verificationCode") ?? "";
+  const email = searchParams.get("email") ?? "";
 
   const {
     register,
@@ -67,72 +64,72 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState<ErrorResponse>({});
   const [isLoading, setIsLoading] = useState(false);
 
+  const onSubmit: FormEventHandler<HTMLFormElement> = handleSubmit(
+    async (data) => {
+      setIsLoading(true);
+      try {
+        const resetPasswordData: ResetPasswordProps &
+          ResetPasswordSupportingDataProps = {
+          newPassword: data.newPassword,
+          confirmNewPassword: data.confirmNewPassword,
+          email: email,
+          verificationCode: verificationCode,
+        };
 
-  const onSubmit: FormEventHandler<HTMLFormElement> = handleSubmit(async (data) => {
-    setIsLoading(true)
-    try {
-      const resetPasswordData: ResetPasswordProps & ResetPasswordSupportingDataProps = {
-        newPassword: data.newPassword,
-        confirmNewPassword: data.confirmNewPassword,
-        email: email, 
-        verificationCode: verificationCode
-      };
-
-      
-      const response = await resetPassword(resetPasswordData);
-      setIsLoading(false);
-
-
-      // set the userId in localstorage
-      // localStorage.setItem('userId', JSON.stringify(response?.userId))
-
-      // toast({
-      //   title: "Password Reset!",
-      //   description: "You've successfully reset your password",
-      //   status: 'success',
-      //   position: 'top',
-      //   duration: 4000,
-      //   isClosable: true,
-      // });
-
-      // setTimeout(() => {
-      //   router.push('/auth/login');
-      // }, 1000);
-
-    } catch (err) {
-      if (err instanceof Error) {
+        const response = await resetPassword(resetPasswordData);
         setIsLoading(false);
-        const errorResponse: ErrorResponse = ErrorManager.handle(err);
-        setError(errorResponse);
 
-        toast({
-          title: errorResponse.title,
-          description: errorResponse.message,
-          status: 'error',
-          position: 'top',
-          duration: 5000,
-          isClosable: true,
-        });
+        // set the userId in localstorage
+        // localStorage.setItem('userId', JSON.stringify(response?.userId))
 
-        if (errorResponse.title === 'User is not confirmed') {
-          setTimeout(() => {
-            toast({
-              title: "Redirection Notice",
-              description: "You're about to be redirected to the code dashboard page",
-              status: 'warning',
-              position: 'top',
-              duration: 4000,
-              isClosable: true,
-            });
+        // toast({
+        //   title: "Password Reset!",
+        //   description: "You've successfully reset your password",
+        //   status: 'success',
+        //   position: 'top',
+        //   duration: 4000,
+        //   isClosable: true,
+        // });
 
+        // setTimeout(() => {
+        //   router.push('/auth/login');
+        // }, 1000);
+      } catch (err) {
+        if (err instanceof Error) {
+          setIsLoading(false);
+          const errorResponse: ErrorResponse = ErrorManager.handle(err);
+          setError(errorResponse);
+
+          toast({
+            title: errorResponse.title,
+            description: errorResponse.message,
+            status: "error",
+            position: "top",
+            duration: 5000,
+            isClosable: true,
+          });
+
+          if (errorResponse.title === "User is not confirmed") {
             setTimeout(() => {
-              router.push(`/dashboard`);
-            }, 4000);
-          }, 6000);
+              toast({
+                title: "Redirection Notice",
+                description:
+                  "You're about to be redirected to the code dashboard page",
+                status: "warning",
+                position: "top",
+                duration: 4000,
+                isClosable: true,
+              });
+
+              setTimeout(() => {
+                router.push(`/dashboard`);
+              }, 4000);
+            }, 6000);
+          }
         }
       }
-    } 
-  });
+    }
+  );
 
   return (
     <>
@@ -158,37 +155,38 @@ export default function ResetPasswordPage() {
           >
             <Stack spacing={4}>
               <form onSubmit={onSubmit}>
-                <FormControl 
-                  id="newPassword" 
+                <FormControl
+                  id="newPassword"
                   isInvalid={!!errors.newPassword}
-                  marginBottom={'4'}
+                  marginBottom={"4"}
                 >
                   <FormLabel>New password</FormLabel>
                   <Input
                     {...register("newPassword")}
                     type="password"
                     autoComplete="off"
-                    placeholder='Enter your new password'
+                    placeholder="Enter your new password"
                   />
                   <FormErrorMessage>
                     {errors.newPassword && errors.newPassword?.message}
                   </FormErrorMessage>
                 </FormControl>
 
-                <FormControl 
-                  id="confirmNewPassword" 
+                <FormControl
+                  id="confirmNewPassword"
                   isInvalid={!!errors.confirmNewPassword}
-                  marginBottom={'4'}
+                  marginBottom={"4"}
                 >
                   <FormLabel>Confirm new password</FormLabel>
                   <Input
                     {...register("confirmNewPassword")}
                     type="password"
                     autoComplete="off"
-                    placeholder='Confirm new password'
+                    placeholder="Confirm new password"
                   />
                   <FormErrorMessage>
-                    {errors.confirmNewPassword && errors.confirmNewPassword?.message}
+                    {errors.confirmNewPassword &&
+                      errors.confirmNewPassword?.message}
                   </FormErrorMessage>
                 </FormControl>
 
@@ -208,7 +206,6 @@ export default function ResetPasswordPage() {
               </form>
             </Stack>
           </Box>
-
         </Stack>
       </Flex>
     </>

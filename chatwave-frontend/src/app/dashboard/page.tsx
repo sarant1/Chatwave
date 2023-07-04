@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useCheckAuth } from "@/hooks/useCheckAuth.hook";
 
 export default function DashboardPage() {
@@ -11,5 +11,5 @@ export default function DashboardPage() {
       <h1>This is the Dashboard</h1>
       <h2>{user?.email}</h2>
     </div>
-  )
+  );
 }

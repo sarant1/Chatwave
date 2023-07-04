@@ -1,12 +1,9 @@
-
 import dotenv from "dotenv";
 dotenv.config();
-
 
 import { Inter } from "next/font/google";
 
 import { AppChakraProvider } from "@/providers/chakra.provider";
-
 
 const inter = Inter({ subsets: ["latin"] });
 

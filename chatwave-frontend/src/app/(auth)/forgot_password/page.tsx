@@ -14,13 +14,13 @@ import {
   Text,
   useColorModeValue,
   Divider,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 
 import { FormEventHandler, useState } from "react";
 
 import { useForm } from "react-hook-form";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 type FormData = {
   email: string;
@@ -30,7 +30,10 @@ type FormData = {
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { forgotPassword } from "@/services/auth/forgotPassword";
-import { ForgotPasswordProps, ForgotPasswordSchema } from "@/utils/validators/forgotPassword.validator";
+import {
+  ForgotPasswordProps,
+  ForgotPasswordSchema,
+} from "@/utils/validators/forgotPassword.validator";
 
 import amplifyConfigure from "@/utils/configure-amplify";
 
@@ -40,7 +43,6 @@ amplifyConfigure();
 import { ErrorManager, ErrorResponse } from "@/utils/exceptions/errorManager";
 
 export default function ForgotPasswordPage() {
-
   const router = useRouter();
   const toast = useToast();
 
@@ -55,60 +57,62 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState<ErrorResponse>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit: FormEventHandler<HTMLFormElement> = handleSubmit(async (data) => {
-    console.log("errors:", errors)
-    setIsLoading(true)
-    try {
-      const forgotPasswordData: ForgotPasswordProps = {
-        email: data.email,
-      };
+  const onSubmit: FormEventHandler<HTMLFormElement> = handleSubmit(
+    async (data) => {
+      console.log("errors:", errors);
+      setIsLoading(true);
+      try {
+        const forgotPasswordData: ForgotPasswordProps = {
+          email: data.email,
+        };
 
-      const response = await forgotPassword(forgotPasswordData);
-      setIsLoading(false);
-
-      toast({
-        title: "Success",
-        description: "You've been sent a reset password link in your email",
-        status: 'success',
-        position: 'top',
-        duration: 4000,
-        isClosable: true,
-      });
-
-    } catch (err) {
-      if (err instanceof Error) {
+        const response = await forgotPassword(forgotPasswordData);
         setIsLoading(false);
-        const errorResponse: ErrorResponse = ErrorManager.handle(err);
-        setError(errorResponse);
 
         toast({
-          title: errorResponse.title,
-          description: errorResponse.message,
-          status: 'error',
-          position: 'top',
-          duration: 5000,
+          title: "Success",
+          description: "You've been sent a reset password link in your email",
+          status: "success",
+          position: "top",
+          duration: 4000,
           isClosable: true,
         });
+      } catch (err) {
+        if (err instanceof Error) {
+          setIsLoading(false);
+          const errorResponse: ErrorResponse = ErrorManager.handle(err);
+          setError(errorResponse);
 
-        if (errorResponse.title === 'User is not confirmed') {
-          setTimeout(() => {
-            toast({
-              title: "Redirection Notice",
-              description: "You're about to be redirected to the code verification page",
-              status: 'warning',
-              position: 'top',
-              duration: 4000,
-              isClosable: true,
-            });
+          toast({
+            title: errorResponse.title,
+            description: errorResponse.message,
+            status: "error",
+            position: "top",
+            duration: 5000,
+            isClosable: true,
+          });
 
+          if (errorResponse.title === "User is not confirmed") {
             setTimeout(() => {
-              router.push(`/verify?email=${data.email}`);
-            }, 4000);
-          }, 6000);
+              toast({
+                title: "Redirection Notice",
+                description:
+                  "You're about to be redirected to the code verification page",
+                status: "warning",
+                position: "top",
+                duration: 4000,
+                isClosable: true,
+              });
+
+              setTimeout(() => {
+                router.push(`/verify?email=${data.email}`);
+              }, 4000);
+            }, 6000);
+          }
         }
       }
-    } 
-  });
+    }
+  );
 
   return (
     <>
@@ -122,7 +126,7 @@ export default function ForgotPasswordPage() {
           <Stack align={"center"}>
             <Heading fontSize={"4xl"}>Forgot your password?</Heading>
             <Text fontSize={"lg"} color={"gray.600"}>
-                You will recieve a email with a reset link
+              You will recieve a email with a reset link
             </Text>
           </Stack>
 
@@ -134,17 +138,17 @@ export default function ForgotPasswordPage() {
           >
             <Stack spacing={4}>
               <form onSubmit={onSubmit}>
-                <FormControl 
-                  id="email" 
+                <FormControl
+                  id="email"
                   isInvalid={!!errors.email}
-                  marginBottom={'4'}
+                  marginBottom={"4"}
                 >
                   <FormLabel>Email address</FormLabel>
                   <Input
                     {...register("email")}
                     type="email"
                     autoComplete="off"
-                    placeholder='Enter your email'
+                    placeholder="Enter your email"
                   />
                   <FormErrorMessage>
                     {errors.email && errors.email?.message}
@@ -168,7 +172,10 @@ export default function ForgotPasswordPage() {
           </Box>
 
           <Text fontSize={"lg"} color={"gray.600"} textAlign="center">
-            Did not get a reset link? <Link color={"blue.400"} href='/signup'>Resend link</Link>
+            Did not get a reset link?{" "}
+            <Link color={"blue.400"} href="/signup">
+              Resend link
+            </Link>
           </Text>
         </Stack>
       </Flex>

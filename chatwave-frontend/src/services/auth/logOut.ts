@@ -1,5 +1,4 @@
-import { Auth } from "aws-amplify"
-
+import { Auth } from "aws-amplify";
 
 export const logOut = async () => {
   try {
@@ -7,4 +6,4 @@ export const logOut = async () => {
   } catch (err) {
     console.error(err);
   }
-}
+};

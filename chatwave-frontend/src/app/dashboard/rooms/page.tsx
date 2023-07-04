@@ -1,12 +1,9 @@
-import React from "react";
-import RoomsList from "@/components/RoomsList";
+"use client";
 
-const RoomsPage = () => {
-  return (
-    <div className="p-0">
-      <RoomsList />
-    </div>
-  );
+import React from "react";
+
+const RoomsPage: React.FC = () => {
+  return <div>Nothing to see here...</div>;
 };
 
 export default RoomsPage;

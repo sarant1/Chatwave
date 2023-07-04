@@ -1,18 +1,17 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
-import { useContext } from "react";
-import { AuthContext } from "@/contexts/auth.context";
+import React from "react";
+import RoomsList from "@/components/RoomsList";
+import MessageBox from "@/components/MessageBox";
+import { Flex } from "@chakra-ui/react";
 
-export default function DashboardPage() {
-  const { user } = useContext(AuthContext);
-
-  console.log("we're in dashboard:", user);
-
+const RoomsPage: React.FC = () => {
   return (
-    <div>
-      <h1>This is the Dashboard</h1>
-      <h2>{user ? user.email : "loading..."}</h2>
-    </div>
+    <Flex minHeight="92vh">
+      <RoomsList />
+      <MessageBox />
+    </Flex>
   );
-}
+};
+
+export default RoomsPage;

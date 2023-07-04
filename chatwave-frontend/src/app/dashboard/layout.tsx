@@ -170,11 +170,13 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
     console.log("logout");
   };
 
+  const { user } = useContext(AuthContext);
+
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 4 }}
-      height="20"
+      height="8vh"
       alignItems="center"
       bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
@@ -226,7 +228,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">Justina Clark</Text>
+                  <Text fontSize="sm">{user?.email}</Text>
                   <Text fontSize="xs" color="gray.600">
                     Admin
                   </Text>

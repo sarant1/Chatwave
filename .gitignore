@@ -64,3 +64,9 @@ __pycache__/*
 
 docker/*
 docker
+
+pyenv/*
+pyenv
+
+boto3
+sys

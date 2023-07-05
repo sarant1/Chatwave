@@ -1,14 +1,20 @@
 import boto3
 from uuid import uuid4
 from datetime import datetime
-
+import os
 
 red = '\033[91m'
 reset = '\033[0m'
+endpoint_url = None
+
+if os.environ.get('DDB_ENDPOINT'):
+    endpoint_url = os.environ.get('DDB_ENDPOINT')
+else:
+    endpoint_url = None
 
 class DynamoDB():
     def __init__(self):
-        self.client = boto3.client('dynamodb', region_name='us-east-1')
+        self.client = boto3.client('dynamodb', region_name='us-east-1', endpoint_url=endpoint_url)
         self.table = 'ChatWave'
 
     def get_user(self, username):
@@ -41,7 +47,10 @@ class DynamoDB():
                             'Item': {
                                 'pk': {'S': f'USER#{user1}' },
                                 'sk': {'S': f'ROOM#{uuid}'},
-                                'title': {'S': user2}
+                                'title': {'S': user2},
+                                'latest_message': {'S': message},
+                                'latest_message_date': {'S': datetime.now().strftime('%Y-%m-%d %H:%M:%S')},
+                                'avatar_url': {'S': 'https://i.imgur.com/2WZtUZB.png'}
                             }
                         },
                     },
@@ -50,7 +59,10 @@ class DynamoDB():
                             'Item': {
                                 'pk': {'S': f'USER#{user2}' },
                                 'sk': {'S': f'ROOM#{uuid}'},
-                                'title': { 's': user1 }
+                                'title': { 'S': user1 },
+                                'latest_message': {'S': message},
+                                'latest_message_date': {'S': datetime.now().strftime('%Y-%m-%d %H:%M:%S')},
+                                'avatar_url': {'S': 'https://i.imgur.com/2WZtUZB.png'}
                             }
                         },
                     },

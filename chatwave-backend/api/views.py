@@ -9,6 +9,7 @@ from django.http import JsonResponse
 import json
 
 from database.dynamodb import DynamoDB
+from formatters.dynamodb import format_rooms
 
 red = '\033[91m'
 reset = '\033[0m'
@@ -47,7 +48,7 @@ def user(request):
 
 # Create rooms and get rooms
 @require_http_methods(["POST", "GET", "OPTIONS"])
-def room(request):
+def room(request, email=None):
     print(request)
     if request.method == 'POST':
         try:
@@ -63,12 +64,12 @@ def room(request):
             print(red + str(e) + reset, flush=True)
             response_data = {'message': 'Failed to Create Room'}
             return JsonResponse(response_data, status=400, content_type='application/json')
-    elif request.method == 'GET':
+    elif request.method == 'GET' and email:
         try:
-            email = request.GET.get('email')
             print("email: ", email, flush=True)
             data = dynamodb.get_rooms(email)
-            return JsonResponse(data, status=200, content_type='application/json', safe=False)
+            formatted_data = format_rooms(data)
+            return JsonResponse(formatted_data, status=200, content_type='application/json', safe=False)
         except Exception as e:
             print(red + str(e) + reset, flush=True)
             response_data = {'message': 'Failed to Find Rooms'}

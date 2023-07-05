@@ -17,6 +17,10 @@ const RoomsList: React.FC<RoomsListProps> = ({ rooms }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useContext(AuthContext);
 
+  if (rooms.length > 0) {
+    console.log(rooms);
+  }
+
   return (
     <Container
       maxW={{ base: "100vw", md: "sm" }}
@@ -47,6 +51,7 @@ const RoomsList: React.FC<RoomsListProps> = ({ rooms }) => {
           title={room.title}
           avatar_url={room.avatar_url}
           latest_message={room.latest_message}
+          latest_message_time={room.latest_message_time}
         />
       ))}
     </Container>

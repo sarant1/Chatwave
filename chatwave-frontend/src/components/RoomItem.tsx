@@ -18,7 +18,7 @@ const RoomItem: React.FC<Room> = (props) => {
         <Flex w="full" flexDir={"column"}>
           <Flex justifyContent="space-between" w="full">
             <Text fontWeight="bold">{props.title}</Text>
-            <Text color="gray.600">3:41ppm</Text>
+            <Text color="gray.600">{props.latest_message_time}</Text>
           </Flex>
           <Text>{props.latest_message}</Text>
         </Flex>

@@ -8,5 +8,6 @@ export interface Room {
   key: string;
   title: string;
   latest_message: string;
+  latest_message_time: string;
   avatar_url: string;
 }

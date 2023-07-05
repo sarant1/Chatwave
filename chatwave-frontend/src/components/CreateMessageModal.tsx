@@ -15,11 +15,12 @@ import {
 import React from "react";
 import { useState } from "react";
 import { User } from "@/utils/types";
+import { getCsrfCookie } from "@/utils/get-csrf-cookies";
 
 interface CreateMessageModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: User;
+  user: User | null;
 }
 
 function CreateMessageModal({
@@ -31,15 +32,34 @@ function CreateMessageModal({
   const [message, setMessage] = useState<string>("");
 
   const handleSubmit = async () => {
-    const response = await fetch("http://localhost:8080/api/room", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, message }),
-    });
-    const data = await response.json();
-    console.log(data);
+    try {
+      const csrfToken = getCsrfCookie();
+      console.log("csrfToken:", csrfToken);
+      if (!user) {
+        return;
+      }
+      const input = {
+        user1: user.email,
+        user2: email,
+        message: message,
+      };
+
+      console.log(JSON.stringify(input));
+
+      const response = await fetch("http://localhost:8080/api/room", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify(input),
+        credentials: "include",
+      });
+      const data = await response;
+      console.log(data);
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
   return (

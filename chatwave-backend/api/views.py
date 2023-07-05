@@ -14,6 +14,7 @@ red = '\033[91m'
 reset = '\033[0m'
 
 dynamodb = DynamoDB()
+
 def index(request):
     return JsonResponse("Hello, world. You're at the polls index.")
 
@@ -64,8 +65,8 @@ def room(request):
             return JsonResponse(response_data, status=400, content_type='application/json')
     elif request.method == 'GET':
         try:
-            body = json.loads(request.body)
-            email = body['email']
+            email = request.GET.get('email')
+            print("email: ", email, flush=True)
             data = dynamodb.get_rooms(email)
             return JsonResponse(data, status=200, content_type='application/json', safe=False)
         except Exception as e:

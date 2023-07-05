@@ -41,6 +41,7 @@ class DynamoDB():
                             'Item': {
                                 'pk': {'S': f'USER#{user1}' },
                                 'sk': {'S': f'ROOM#{uuid}'},
+                                'title': {'S': user2}
                             }
                         },
                     },
@@ -49,6 +50,7 @@ class DynamoDB():
                             'Item': {
                                 'pk': {'S': f'USER#{user2}' },
                                 'sk': {'S': f'ROOM#{uuid}'},
+                                'title': { 's': user1 }
                             }
                         },
                     },

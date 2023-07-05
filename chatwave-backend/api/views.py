@@ -3,7 +3,7 @@ import sys
 sys.path.append('..')
 #
 
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse
 import json
@@ -44,8 +44,10 @@ def user(request):
     else:
         return JsonResponse({'message': 'Invalid Request'}, status=400, content_type='application/json')
 
-@require_http_methods(["POST", "GET"])
+# Create rooms and get rooms
+@require_http_methods(["POST", "GET", "OPTIONS"])
 def room(request):
+    print(request)
     if request.method == 'POST':
         try:
             body = json.loads(request.body)

@@ -49,7 +49,7 @@ class DynamoDB():
                                 'sk': {'S': f'ROOM#{uuid}'},
                                 'title': {'S': user2},
                                 'latest_message': {'S': message},
-                                'latest_message_date': {'S': datetime.now().strftime('%Y-%m-%d %H:%M:%S')},
+                                'latest_message_time': {'S': datetime.now().strftime('%Y-%m-%d %H:%M:%S')},
                                 'avatar_url': {'S': 'https://i.imgur.com/2WZtUZB.png'}
                             }
                         },
@@ -61,7 +61,7 @@ class DynamoDB():
                                 'sk': {'S': f'ROOM#{uuid}'},
                                 'title': { 'S': user1 },
                                 'latest_message': {'S': message},
-                                'latest_message_date': {'S': datetime.now().strftime('%Y-%m-%d %H:%M:%S')},
+                                'latest_message_time': {'S': datetime.now().strftime('%Y-%m-%d %H:%M:%S')},
                                 'avatar_url': {'S': 'https://i.imgur.com/2WZtUZB.png'}
                             }
                         },

@@ -1,3 +1,8 @@
+
+
+from datetime import datetime
+from formatters.date_time import get_room_time
+
 def format_rooms(data):
     print("DATA: ", data, flush=True)
     data = data['Items']
@@ -10,7 +15,7 @@ def format_rooms(data):
         room_data['title'] = room['title']['S']
         room_data['latest_message'] = room['latest_message']['S']
         room_data["avatar_url"] = room["avatar_url"]["S"]
-        room_data["latest_message_date"] = room["latest_message_date"]["S"]
+        room_data["latest_message_time"] = get_room_time(room['latest_message_time']['S'])
         formatted_data.append(room_data)
     return formatted_data
 

@@ -1,7 +1,8 @@
 import { Avatar, Box, Container, Flex, Text } from "@chakra-ui/react";
 import React from "react";
+import { Room } from "@/utils/types";
 
-const RoomItem: React.FC = () => {
+const RoomItem: React.FC<Room> = (props) => {
   return (
     <Box
       p={3}
@@ -13,19 +14,13 @@ const RoomItem: React.FC = () => {
       _hover={{ cursor: "pointer", bg: "gray.300" }}
     >
       <Flex>
-        <Avatar
-          size="md"
-          mr={3}
-          src={
-            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-          }
-        />
+        <Avatar size="md" mr={3} src={props.avatar_url} />
         <Flex w="full" flexDir={"column"}>
           <Flex justifyContent="space-between" w="full">
-            <Text fontWeight="bold">elon@gmail.com</Text>
-            <Text color="gray.600">3:41pm</Text>
+            <Text fontWeight="bold">{props.title}</Text>
+            <Text color="gray.600">3:41ppm</Text>
           </Flex>
-          <Text>Hello how is the weather today ?</Text>
+          <Text>{props.latest_message}</Text>
         </Flex>
       </Flex>
     </Box>

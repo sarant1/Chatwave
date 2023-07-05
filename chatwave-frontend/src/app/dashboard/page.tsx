@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import RoomsList from "@/components/RoomsList";
 import MessageBox from "@/components/MessageBox";
 import { Flex } from "@chakra-ui/react";
 import { getCsrfCookie } from "@/utils/get-csrf-cookies";
 import { AuthContext } from "@/contexts/auth.context";
+import { Room } from "@/utils/types";
 
 const RoomsPage: React.FC = () => {
   const { user } = useContext(AuthContext);
+  const [rooms, setRooms] = useState<Room[]>([]);
 
   useEffect(() => {
-    console.log("HELLO WORLD");
     fetchRooms();
   }, [user]);
 
@@ -21,7 +22,7 @@ const RoomsPage: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/room?email=${user.email}`,
+        `http://localhost:8080/api/room/${user.email}`,
         {
           method: "GET",
           headers: {
@@ -32,7 +33,7 @@ const RoomsPage: React.FC = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
+      setRooms(data);
     } catch (error: any) {
       console.log(error);
     }
@@ -40,7 +41,7 @@ const RoomsPage: React.FC = () => {
 
   return (
     <Flex minHeight="92vh">
-      <RoomsList />
+      <RoomsList rooms={rooms} />
       <MessageBox />
     </Flex>
   );

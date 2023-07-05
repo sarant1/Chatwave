@@ -7,8 +7,13 @@ import { BsPencilSquare } from "react-icons/bs";
 import CreateMessageModal from "@/components/CreateMessageModal";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/auth.context";
+import { Room } from "@/utils/types";
 
-const RoomsList: React.FC = () => {
+interface RoomsListProps {
+  rooms: Room[];
+}
+
+const RoomsList: React.FC<RoomsListProps> = ({ rooms }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useContext(AuthContext);
 
@@ -35,9 +40,15 @@ const RoomsList: React.FC = () => {
         />
       </Flex>
       <CreateMessageModal onClose={onClose} isOpen={isOpen} user={user} />
-      <RoomItem />
-      <RoomItem />
-      <RoomItem />
+      {rooms.map((room) => (
+        <RoomItem
+          user={room.user}
+          key={room.key}
+          title={room.title}
+          avatar_url={room.avatar_url}
+          latest_message={room.latest_message}
+        />
+      ))}
     </Container>
   );
 };

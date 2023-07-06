@@ -1,9 +1,37 @@
-import React from "react";
-import { Container, Flex } from "@chakra-ui/react";
+import React, { useEffect, useContext } from "react";
+import { Container } from "@chakra-ui/react";
 import CreateNewMessageBox from "./CreateNewMessage";
 import MessageItem from "./MessageItem";
+import { AuthContext } from "@/contexts/auth.context";
+import { getCsrfCookie } from "@/utils/get-csrf-cookies";
 
 const MessageBox: React.FC = () => {
+  const { selectedRoom, setSelectedRoom } = useContext(AuthContext);
+  const fetchMessages = async () => {
+    try {
+      if (!selectedRoom) return;
+      const csrfToken = getCsrfCookie();
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/message/${selectedRoom}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+          },
+        }
+      );
+      const data = await response.json();
+      setSelectedRoom(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMessages();
+  }, [selectedRoom]);
+
   return (
     <>
       <Container
@@ -16,9 +44,6 @@ const MessageBox: React.FC = () => {
         overflowY="scroll"
       >
         <CreateNewMessageBox />
-        <MessageItem message={"How are you doing"} sender={true} />
-        <MessageItem message={"I am great and you!"} sender={false} />
-        <MessageItem message={"awesome thanks"} sender={true} />
       </Container>
     </>
   );

@@ -1,6 +1,5 @@
 
 
-from datetime import datetime
 from formatters.date_time import get_room_time
 
 def format_rooms(data):
@@ -17,5 +16,16 @@ def format_rooms(data):
         room_data["avatar_url"] = room["avatar_url"]["S"]
         room_data["latest_message_time"] = get_room_time(room['latest_message_time']['S'])
         formatted_data.append(room_data)
+    return formatted_data
+
+def format_messages(data):
+    data = data['Items']
+    formatted_data = []
+    for message in data:
+        message_data = {}
+        message_data['message'] = message['message']['S']
+        message_data['sender_id'] = message['sender_id']['S']
+        message_data['created_at'] = message['created_at']['S']
+        formatted_data.append(message_data)
     return formatted_data
 

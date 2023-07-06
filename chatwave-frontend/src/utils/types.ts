@@ -11,3 +11,7 @@ export interface Room {
   latest_message_time: string;
   avatar_url: string;
 }
+
+export interface Message {
+  user: string;
+}

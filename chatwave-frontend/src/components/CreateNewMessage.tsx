@@ -1,8 +1,8 @@
 import { Input, Button, Flex, Spacer } from "@chakra-ui/react";
 
-const CreateNewMessageBox = () => {
+const CreateNewMessageBox: React.FC = () => {
   return (
-    <Flex alignItems="center" mb={4} gap={2}>
+    <Flex alignItems="center" mb={4} gap={2} mt={2}>
       <Input
         flex="1"
         placeholder="Type a message..."

@@ -93,13 +93,15 @@ class DynamoDB():
     
     def create_message(self, room, message, email):
         now = datetime.now()
+        uuid = uuid4()
         formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
         return self.client.put_item(Item={
             'pk': {'S': f'ROOM#{room}' },
             'sk': {'S': f'MSG#{formatted_date}'},
             'message': {'S': message },
             'sender_id': {'S': email},
-            'created_at': {'S': now.strftime('%Y-%m-%d %H:%M:%S')}
+            'created_at': {'S': now.strftime('%Y-%m-%d %H:%M:%S')},
+            'key': {'S': str(uuid)}
             },
             ReturnValues='NONE',
             TableName=self.table

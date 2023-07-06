@@ -26,6 +26,7 @@ def format_messages(data):
         message_data['message'] = message['message']['S']
         message_data['sender_id'] = message['sender_id']['S']
         message_data['created_at'] = message['created_at']['S']
+        message_data['key'] = message['key']['S']
         formatted_data.append(message_data)
     return formatted_data
 

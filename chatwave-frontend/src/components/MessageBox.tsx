@@ -1,5 +1,6 @@
 import React from "react";
-import { Container } from "@chakra-ui/react";
+import { Container, Flex } from "@chakra-ui/react";
+import CreateNewMessageBox from "./CreateNewMessage";
 
 const MessageBox: React.FC = () => {
   return (
@@ -7,9 +8,13 @@ const MessageBox: React.FC = () => {
       <Container
         borderWidth="1px"
         borderRadius="lg"
-        borderColor="gary.200"
+        borderColor="gray.400"
         m={4}
-      ></Container>
+        display="flex"
+        flexDirection="column-reverse"
+      >
+        <CreateNewMessageBox />
+      </Container>
     </>
   );
 };

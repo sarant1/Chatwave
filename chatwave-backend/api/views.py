@@ -1,7 +1,6 @@
 # move to parent directory
 import sys
 sys.path.append('..')
-#
 
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -9,7 +8,7 @@ from django.http import JsonResponse
 import json
 
 from database.dynamodb import DynamoDB
-from formatters.dynamodb import format_rooms
+from formatters.dynamodb import format_rooms, format_messages
 
 red = '\033[91m'
 reset = '\033[0m'
@@ -47,6 +46,7 @@ def user(request):
         return JsonResponse({'message': 'Invalid Request'}, status=400, content_type='application/json')
 
 # Create rooms and get rooms
+@ensure_csrf_cookie
 @require_http_methods(["POST", "GET", "OPTIONS"])
 def room(request, email=None):
     print(request)
@@ -93,10 +93,11 @@ def messages(request):
             return JsonResponse(response_data, status=400, content_type='application/json')
     elif request.method == "GET":
         try:
-            body = json.loads(request.body)
-            room = body['room']
+            room = request.GET.get('room')
+            print("room: ", room, flush=True)
             data = dynamodb.get_messages(room)
-            return JsonResponse(data, status=200, content_type='application/json', safe=False)
+            formatted_data = format_messages(data)
+            return JsonResponse(formatted_data, status=200, content_type='application/json', safe=False)
         except Exception as e:
             print(red + str(e) + reset, flush=True)
             response_data = {'message': 'Failed to Find Messages'}

@@ -12,7 +12,7 @@ const MessageBox: React.FC = () => {
       if (!selectedRoom) return;
       const csrfToken = getCsrfCookie();
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/message/${selectedRoom}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/messages?room=${selectedRoom}`,
         {
           method: "GET",
           headers: {
@@ -22,7 +22,7 @@ const MessageBox: React.FC = () => {
         }
       );
       const data = await response.json();
-      setSelectedRoom(data);
+      console.log(data);
     } catch (error) {
       console.log(error);
     }

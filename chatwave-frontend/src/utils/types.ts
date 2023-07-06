@@ -10,6 +10,7 @@ export interface Room {
   latest_message: string;
   latest_message_time: string;
   avatar_url: string;
+  room_id: string;
 }
 
 export interface Message {

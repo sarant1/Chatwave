@@ -15,7 +15,7 @@ interface RoomsListProps {
 
 const RoomsList: React.FC<RoomsListProps> = ({ rooms }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user } = useContext(AuthContext);
+  const { user, setSelectedRoom } = useContext(AuthContext);
 
   if (rooms.length > 0) {
     console.log(rooms);
@@ -52,6 +52,8 @@ const RoomsList: React.FC<RoomsListProps> = ({ rooms }) => {
           avatar_url={room.avatar_url}
           latest_message={room.latest_message}
           latest_message_time={room.latest_message_time}
+          setSelectedRoom={setSelectedRoom}
+          room_id={room.key}
         />
       ))}
     </Container>

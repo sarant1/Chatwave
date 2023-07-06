@@ -43,8 +43,6 @@ function CreateMessageModal({
         message: message,
       };
 
-      console.log(JSON.stringify(input));
-
       const response = await fetch("http://localhost:8080/api/room", {
         method: "POST",
         headers: {

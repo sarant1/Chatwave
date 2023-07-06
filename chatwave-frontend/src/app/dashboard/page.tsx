@@ -18,8 +18,6 @@ const RoomsPage: React.FC = () => {
 
   const fetchRooms = async () => {
     if (!user) return;
-    const csrfToken = getCsrfCookie();
-
     try {
       const response = await fetch(
         `http://localhost:8080/api/room/${user.email}`,
@@ -27,7 +25,6 @@ const RoomsPage: React.FC = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
           },
           credentials: "include",
         }

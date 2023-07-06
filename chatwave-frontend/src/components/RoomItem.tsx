@@ -2,7 +2,11 @@ import { Avatar, Box, Container, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import { Room } from "@/utils/types";
 
-const RoomItem: React.FC<Room> = (props) => {
+interface RoomItemProps extends Room {
+  setSelectedRoom: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+const RoomItem: React.FC<RoomItemProps> = (props) => {
   return (
     <Box
       p={3}
@@ -12,6 +16,9 @@ const RoomItem: React.FC<Room> = (props) => {
       borderRadius="lg"
       mb={2}
       _hover={{ cursor: "pointer", bg: "gray.300" }}
+      onClick={() => {
+        props.setSelectedRoom(props.room_id);
+      }}
     >
       <Flex>
         <Avatar size="md" mr={3} src={props.avatar_url} />

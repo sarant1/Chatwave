@@ -1,12 +1,16 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { Container } from "@chakra-ui/react";
 import CreateNewMessageBox from "./CreateNewMessage";
-import MessageItem from "./MessageItem";
+import MessageItem from "@/components/MessageItem";
+import { MessageItemProps } from "@/utils/types";
 import { AuthContext } from "@/contexts/auth.context";
 import { getCsrfCookie } from "@/utils/get-csrf-cookies";
 
 const MessageBox: React.FC = () => {
-  const { selectedRoom, setSelectedRoom } = useContext(AuthContext);
+  const { selectedRoom } = useContext(AuthContext);
+  const [currentMessages, setCurrentMessages] = useState<MessageItemProps[]>(
+    []
+  );
   const fetchMessages = async () => {
     try {
       if (!selectedRoom) return;
@@ -23,6 +27,7 @@ const MessageBox: React.FC = () => {
       );
       const data = await response.json();
       console.log(data);
+      setCurrentMessages(data);
     } catch (error) {
       console.log(error);
     }
@@ -43,7 +48,19 @@ const MessageBox: React.FC = () => {
         flexDirection="column-reverse"
         overflowY="scroll"
       >
-        <CreateNewMessageBox />
+        <CreateNewMessageBox
+          setCurrentMessages={setCurrentMessages}
+          currentMessages={currentMessages}
+        />
+        {selectedRoom &&
+          currentMessages.map((message) => (
+            <MessageItem
+              key={message.key}
+              message={message.message}
+              created_at={message.created_at}
+              sender_id={message.sender_id}
+            />
+          ))}
       </Container>
     </>
   );

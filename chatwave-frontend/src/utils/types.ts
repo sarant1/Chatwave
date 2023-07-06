@@ -13,6 +13,9 @@ export interface Room {
   room_id: string;
 }
 
-export interface Message {
-  user: string;
+export interface MessageItemProps {
+  key: string;
+  created_at: string;
+  message: string;
+  sender_id: string;
 }

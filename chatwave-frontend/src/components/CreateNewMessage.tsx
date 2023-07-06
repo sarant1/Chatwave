@@ -2,13 +2,21 @@ import { Input, Button, Flex, Spacer } from "@chakra-ui/react";
 import { useState, useContext } from "react";
 import { getCsrfCookie } from "@/utils/get-csrf-cookies";
 import { AuthContext } from "@/contexts/auth.context";
+import { MessageItemProps } from "@/utils/types";
 
-const CreateNewMessageBox: React.FC = () => {
+interface CreateNewMessageBoxProps {
+  setCurrentMessages: React.Dispatch<MessageItemProps[]>;
+  currentMessages: MessageItemProps[];
+}
+
+const CreateNewMessageBox: React.FC<CreateNewMessageBoxProps> = (props) => {
   const [message, setMessage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user, selectedRoom } = useContext(AuthContext);
 
   const handleSubmit = async () => {
     try {
+      setIsLoading(true);
       const csrfToken = getCsrfCookie();
       console.log("csrfToken:", csrfToken);
       if (!user) {
@@ -17,13 +25,14 @@ const CreateNewMessageBox: React.FC = () => {
 
       // todo change this to use the user access token
       const input = {
+        room: selectedRoom,
         message: message,
-        sender_id: user.email,
+        email: user.email,
       };
 
       console.log(JSON.stringify(input));
 
-      const response = await fetch("http://localhost:8080/api/message", {
+      const response = await fetch("http://localhost:8080/api/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,11 +41,13 @@ const CreateNewMessageBox: React.FC = () => {
         body: JSON.stringify(input),
         credentials: "include",
       });
-      const data = await response;
-      console.log(data);
+      const data: MessageItemProps = await response.json();
+      setMessage("");
+      props.setCurrentMessages([...props.currentMessages, data]);
     } catch (error: any) {
       console.log(error);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -46,8 +57,14 @@ const CreateNewMessageBox: React.FC = () => {
         placeholder="Type a message..."
         backgroundColor="gray.300"
         onChange={(e) => setMessage(e.target.value)}
+        value={message}
       ></Input>
-      <Button type="submit" colorScheme="messenger" onClick={handleSubmit}>
+      <Button
+        type="submit"
+        colorScheme="messenger"
+        onClick={handleSubmit}
+        isLoading={isLoading}
+      >
         Send
       </Button>
     </Flex>

@@ -37,7 +37,7 @@ const RoomsPage: React.FC = () => {
   };
 
   return (
-    <Flex minHeight="92vh">
+    <Flex h="92vh">
       <RoomsList rooms={rooms} />
       <MessageBox />
     </Flex>

@@ -17,25 +17,14 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-import { FormEventHandler, useState } from "react";
+import { useState } from "react";
 
-import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import NextLink from "next/link";
-type FormData = {
-  email: string;
-  password: string;
-};
-
-import { zodResolver } from "@hookform/resolvers/zod";
 
 import { logIn } from "@/services/auth/logIn";
-import { LoginProps } from "@/utils/validators/login.validator";
-import { LoginSchema } from "@/utils/validators/login.validator";
+import { LoginProps, LoginSchema } from "@/utils/validators/login.validator";
 import { useAuth } from "@/hooks/useAuth";
-import { AuthContext } from "@/contexts/auth.context";
-import { useContext } from "react";
-
 import { ErrorManager, ErrorResponse } from "@/utils/exceptions/errorManager";
 
 import amplifyConfigure from "@/utils/configure-amplify";
@@ -44,77 +33,78 @@ import amplifyConfigure from "@/utils/configure-amplify";
 amplifyConfigure();
 
 export default function Signin() {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const router = useRouter();
   const toast = useToast();
 
   useAuth();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(LoginSchema),
-  });
+  const guestCredentails: LoginProps = {
+    email: "guest@chatwave.com",
+    password: "123Testing!",
+  };
 
-  const [error, setError] = useState<ErrorResponse>({});
+  const [errors, setError] = useState<ErrorResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit: FormEventHandler<HTMLFormElement> = handleSubmit(
-    async (data) => {
-      setIsLoading(true);
-      try {
-        const signUpData: LoginProps = {
-          email: data.email,
-          password: data.password,
-        };
+  //TODO FIX ERROR HANDLING
 
-        await logIn(signUpData);
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      const signUpData: LoginProps = {
+        email: email,
+        password: password,
+      };
+      LoginSchema.parse(signUpData);
+
+      await logIn(signUpData);
+
+      toast({
+        title: "Logged in",
+        description: "You've been successfully logged in",
+        status: "success",
+        position: "top",
+        duration: 4000,
+        isClosable: true,
+      });
+    } catch (err) {
+      if (err instanceof Error) {
+        setIsLoading(false);
+        const errorResponse: ErrorResponse = ErrorManager.handle(err.name);
+        setError(errorResponse);
 
         toast({
-          title: "Logged in",
-          description: "You've been successfully logged in",
-          status: "success",
+          title: errorResponse.title,
+          description: errorResponse.message,
+          status: "error",
           position: "top",
-          duration: 4000,
+          duration: 5000,
           isClosable: true,
         });
-      } catch (err) {
-        if (err instanceof Error) {
-          setIsLoading(false);
-          const errorResponse: ErrorResponse = ErrorManager.handle(err);
-          setError(errorResponse);
+        console.log(errorResponse);
 
-          toast({
-            title: errorResponse.title,
-            description: errorResponse.message,
-            status: "error",
-            position: "top",
-            duration: 5000,
-            isClosable: true,
-          });
+        if (errorResponse.title === "User is not confirmed") {
+          setTimeout(() => {
+            toast({
+              title: "Redirection Notice",
+              description:
+                "You're about to be redirected to the code verification page",
+              status: "warning",
+              position: "top",
+              duration: 4000,
+              isClosable: true,
+            });
 
-          if (errorResponse.title === "User is not confirmed") {
             setTimeout(() => {
-              toast({
-                title: "Redirection Notice",
-                description:
-                  "You're about to be redirected to the code verification page",
-                status: "warning",
-                position: "top",
-                duration: 4000,
-                isClosable: true,
-              });
-
-              setTimeout(() => {
-                router.push(`/auth/verify?email=${data.email}`);
-              }, 4000);
-            }, 6000);
-          }
+              router.push(`/auth/verify?email=${email}`);
+            }, 4000);
+          }, 6000);
         }
       }
     }
-  );
+  };
 
   return (
     <>
@@ -136,59 +126,51 @@ export default function Signin() {
             p={8}
           >
             <Stack spacing={4}>
-              <form onSubmit={onSubmit}>
-                <FormControl id="email" isInvalid={!!errors.email}>
-                  <FormLabel>Email address</FormLabel>
-                  <Input
-                    {...register("email")}
-                    type="email"
-                    autoComplete="off"
-                  />
-                  <FormErrorMessage>
-                    {errors.email && errors.email?.message}
-                  </FormErrorMessage>
-                </FormControl>
+              <FormControl id="email" isInvalid={!!errors}>
+                <FormLabel>Email address</FormLabel>
+                <Input
+                  type="email"
+                  autoComplete="off"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </FormControl>
 
-                <FormControl id="password" isInvalid={!!errors.password}>
-                  <FormLabel>Password</FormLabel>
-                  <Input
-                    {...register("password")}
-                    type="password"
-                    autoComplete="off"
-                  />
-                  <FormErrorMessage>
-                    {errors.password && errors.password?.message}
-                  </FormErrorMessage>
-                </FormControl>
+              <FormControl id="password" isInvalid={!!errors}>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  type="password"
+                  autoComplete="off"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </FormControl>
 
-                <Stack spacing={10}>
-                  <Stack
-                    direction={{ base: "column", sm: "row" }}
-                    align={"start"}
-                    justify={"space-between"}
+              <Stack spacing={10}>
+                <Stack
+                  direction={{ base: "column", sm: "row" }}
+                  align={"start"}
+                  justify={"space-between"}
+                >
+                  <Link
+                    as={NextLink}
+                    color={"blue.400"}
+                    href={"/forgot_password"}
                   >
-                    <Link
-                      as={NextLink}
-                      color={"blue.400"}
-                      href={"/forgot_password"}
-                    >
-                      Forgot password?
-                    </Link>
-                  </Stack>
-
-                  <Button
-                    type="submit"
-                    bg={"blue.400"}
-                    color={"white"}
-                    _hover={{
-                      bg: "blue.500",
-                    }}
-                    isLoading={isLoading}
-                  >
-                    Login
-                  </Button>
+                    Forgot password?
+                  </Link>
                 </Stack>
-              </form>
+
+                <Button
+                  onClick={() => handleSubmit()}
+                  bg={"blue.400"}
+                  color={"white"}
+                  _hover={{
+                    bg: "blue.500",
+                  }}
+                  isLoading={isLoading}
+                >
+                  Login
+                </Button>
+              </Stack>
 
               <Divider />
 
@@ -199,6 +181,11 @@ export default function Signin() {
                   bg: "red.500",
                 }}
                 isDisabled={isLoading}
+                onClick={() => {
+                  setEmail(guestCredentails.email);
+                  setPassword(guestCredentails.password);
+                  handleSubmit();
+                }}
               >
                 Continue as Guest User
               </Button>

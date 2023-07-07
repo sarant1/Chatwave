@@ -1,19 +1,25 @@
 import { Container, Text } from "@chakra-ui/react";
 import { MessageItemProps } from "@/utils/types";
+import { useContext } from "react";
+import { AuthContext } from "@/contexts/auth.context";
 // sender will be true if it is the current user sending the messag
 
 const MessageItem: React.FC<MessageItemProps> = (props) => {
+  const { user } = useContext(AuthContext);
+
   return (
     <Container
-      backgroundColor={!props.sender_id ? "messenger.500" : "green.100"}
+      backgroundColor={
+        props.sender_id !== user?.email ? "messenger.300" : "green.100"
+      }
       p={2}
       mt="2px"
       borderRadius="lg"
       w="auto"
       maxW="60%"
-      marginInlineStart={props.sender_id ? "auto" : 0}
-      marginInlineEnd={props.sender_id ? 0 : "auto"}
-      minH="40px"
+      marginInlineStart={props.sender_id === user?.email ? "auto" : 0}
+      marginInlineEnd={props.sender_id === user?.email ? 0 : "auto"}
+      justifyContent="center"
       alignItems="center"
       display="flex"
     >

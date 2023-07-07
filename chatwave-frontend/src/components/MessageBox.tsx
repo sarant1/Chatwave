@@ -47,6 +47,7 @@ const MessageBox: React.FC = () => {
         display="flex"
         flexDirection="column-reverse"
         overflowY="scroll"
+        lineHeight="1.5"
       >
         <CreateNewMessageBox
           setCurrentMessages={setCurrentMessages}

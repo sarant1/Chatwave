@@ -43,7 +43,7 @@ const CreateNewMessageBox: React.FC<CreateNewMessageBoxProps> = (props) => {
       });
       const data: MessageItemProps = await response.json();
       setMessage("");
-      props.setCurrentMessages([...props.currentMessages, data]);
+      props.setCurrentMessages([data, ...props.currentMessages]);
     } catch (error: any) {
       console.log(error);
     }

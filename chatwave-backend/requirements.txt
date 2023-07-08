@@ -1,3 +1,4 @@
 django
 boto3
 django-cors-headers
+django-cognito-jwt

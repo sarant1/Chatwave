@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,9 +25,18 @@ SECRET_KEY = 'django-insecure-324(ehh5j#xtxkcywi6unnv+^(+74(#03-2odxf_cwwtz9^9y-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework', # Django REST Framework
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -60,6 +69,10 @@ CORS_ALLOW_HEADERS = [
     "X-CSRFToken",
     "content-type",
 ]
+
+COGNITO_AWS_REGION = os.environ["AWS_DEFAULT_REGION"] # 'eu-central-1'
+COGNITO_USER_POOL = os.environ["AWS_COGNITO_USER_POOL_ID"]   # 'eu-central-1_xYzaq'
+COGNITO_AUDIENCE = os.environ["AWS_COGNITO_USER_POOL_CLIENT_ID"]   # 'xYzaq'
 
 CORS_ALLOW_CREDENTIALS = True
 

@@ -47,7 +47,7 @@ export const useAuth = () => {
     Auth.currentAuthenticatedUser()
       .then((currentUser: CurrentUser) => {
         const email = currentUser.attributes.email;
-        const accessToken = currentUser.signInUserSession.accessToken.idToken;
+        const accessToken = currentUser.signInUserSession.idToken.jwtToken;
         console.log("CURRENT_USER", currentUser);
         setUser({ email, accessToken });
         if (pathname === "/login") {

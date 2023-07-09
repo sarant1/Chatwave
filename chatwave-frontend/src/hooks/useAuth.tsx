@@ -13,7 +13,7 @@ interface CurrentUser {
     email: string;
   };
   signInUserSession: {
-    accessToken: {
+    idToken: {
       jwtToken: string;
     };
   };
@@ -47,7 +47,8 @@ export const useAuth = () => {
     Auth.currentAuthenticatedUser()
       .then((currentUser: CurrentUser) => {
         const email = currentUser.attributes.email;
-        const accessToken = currentUser.signInUserSession.accessToken.jwtToken;
+        const accessToken = currentUser.signInUserSession.accessToken.idToken;
+        console.log("CURRENT_USER", currentUser);
         setUser({ email, accessToken });
         if (pathname === "/login") {
           router.replace("/dashboard");

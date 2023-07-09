@@ -65,8 +65,8 @@ __pycache__/*
 docker/*
 docker
 
-pyenv/*
-pyenv
+myenv/*
+myenv
 
 boto3
 sys

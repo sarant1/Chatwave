@@ -10,7 +10,7 @@ import json
 from database.dynamodb import DynamoDB
 from formatters.dynamodb import format_rooms, format_messages
 
-from authentication.jwt_auth import JWTAuthenticator
+from authentication.backend import JSONWebTokenAuthentication
 
 red = '\033[91m'
 reset = '\033[0m'
@@ -51,8 +51,8 @@ def user(request):
 @ensure_csrf_cookie
 @require_http_methods(["POST", "GET", "OPTIONS"])
 def room(request, email=None):
-    auth = JWTAuthenticator()
-    print(auth.get_token_from_request(request), flush=True)
+    auth = JSONWebTokenAuthentication()
+    print(auth.authenticate(request), flush=True)
     if request.method == 'POST':
         try:
             body = json.loads(request.body)

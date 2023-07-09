@@ -7,9 +7,9 @@ import { Flex } from "@chakra-ui/react";
 import { getCsrfCookie } from "@/utils/get-csrf-cookies";
 import { AuthContext } from "@/contexts/auth.context";
 import { Room } from "@/utils/types";
-
+import { refreshToken } from "@/services/auth/refreshToken";
 const RoomsPage: React.FC = () => {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const [rooms, setRooms] = useState<Room[]>([]);
 
   useEffect(() => {
@@ -19,12 +19,16 @@ const RoomsPage: React.FC = () => {
   const fetchRooms = async () => {
     if (!user) return;
     try {
+      const csrfToken = getCsrfCookie();
+      const accessToken = await refreshToken();
       const response = await fetch(
         `http://localhost:8080/api/room/${user.email}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+            "X-CSRFToken": csrfToken,
           },
           credentials: "include",
         }

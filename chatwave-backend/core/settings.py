@@ -68,6 +68,7 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_HEADERS = [
     "X-CSRFToken",
     "content-type",
+    "Authorization",
 ]
 
 COGNITO_AWS_REGION = os.environ["AWS_DEFAULT_REGION"] # 'eu-central-1'

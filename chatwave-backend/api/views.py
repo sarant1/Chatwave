@@ -50,13 +50,14 @@ def user(request):
 # Create rooms and get rooms
 @ensure_csrf_cookie
 @require_http_methods(["POST", "GET", "OPTIONS"])
-def room(request, email=None):
+def room(request):
     auth = JSONWebTokenAuthentication()
-    print(auth.authenticate(request), flush=True)
+    email = auth.authenticate(request)
+    print("EMAIL: ", email, flush=True)
     if request.method == 'POST':
         try:
             body = json.loads(request.body)
-            user1 = body['user1']
+            user1 = email
             user2 = body['user2']
             message = body['message']
             dynamodb.create_room(user1, user2, message)

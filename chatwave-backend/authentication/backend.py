@@ -9,11 +9,12 @@ from jwt.algorithms import RSAAlgorithm
 class TokenError(BaseException):
     pass
 
-class JSONWebTokenAuthentication(BaseException):
+class JSONWebTokenAuthentication(BaseAuthentication):
     def authenticate(self, request):
         token = get_authorization_header(request).split()[1]
         print("TOKEN", token, flush=True)
-        return self.validate_token(token)
+        decoded_token = self.validate_token(token)
+        return decoded_token["email"]
 
     def validate_token(self, token):
         unverifeid_header = jwt.get_unverified_header(token)
@@ -42,13 +43,10 @@ class JSONWebTokenAuthentication(BaseException):
         url = f"https://cognito-idp.{settings.COGNITO_AWS_REGION}.amazonaws.com/{settings.COGNITO_USER_POOL}"
         print("URL", url, flush=True)
         return url
-
+    # TODO Store public keys in cache and refresh them periodically
     def _get_public_key(self):
         url = self._pool_url() + "/.well-known/jwks.json"
         response = requests.get(url)
         response.raise_for_status()
         response = response.json()
         return {item["kid"]: json.dumps(item) for item in response["keys"]}
-
-    
-        

@@ -9,7 +9,7 @@ import { AuthContext } from "@/contexts/auth.context";
 import { Room } from "@/utils/types";
 import { refreshToken } from "@/services/auth/refreshToken";
 const RoomsPage: React.FC = () => {
-  const { user, setUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [rooms, setRooms] = useState<Room[]>([]);
 
   useEffect(() => {
@@ -21,18 +21,15 @@ const RoomsPage: React.FC = () => {
     try {
       const csrfToken = getCsrfCookie();
       const accessToken = await refreshToken();
-      const response = await fetch(
-        `http://localhost:8080/api/room/${user.email}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-            "X-CSRFToken": csrfToken,
-          },
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`http://localhost:8080/api/room`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+          "X-CSRFToken": csrfToken,
+        },
+        credentials: "include",
+      });
       const data = await response.json();
       setRooms(data);
     } catch (error: any) {

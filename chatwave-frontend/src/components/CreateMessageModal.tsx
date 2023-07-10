@@ -15,7 +15,7 @@ import React from "react";
 import { useState } from "react";
 import { User } from "@/utils/types";
 import { getCsrfCookie } from "@/utils/get-csrf-cookies";
-
+import { refreshToken } from "@/services/auth/refreshToken";
 interface CreateMessageModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -33,7 +33,7 @@ function CreateMessageModal({
   const handleSubmit = async () => {
     try {
       const csrfToken = getCsrfCookie();
-      console.log("csrfToken:", csrfToken);
+      const accessToken = await refreshToken();
       if (!user) {
         return;
       }
@@ -48,6 +48,7 @@ function CreateMessageModal({
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": csrfToken,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(input),
         credentials: "include",

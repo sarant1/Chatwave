@@ -1,5 +1,5 @@
 from functools import wraps
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from authentication.backend import JSONWebTokenAuthentication
 from rest_framework.response import Response
 def jwt_auth_required(func):
     @wraps(func)

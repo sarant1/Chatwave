@@ -5,6 +5,7 @@ import MessageItem from "@/components/MessageItem";
 import { MessageItemProps } from "@/utils/types";
 import { AuthContext } from "@/contexts/auth.context";
 import { getCsrfCookie } from "@/utils/get-csrf-cookies";
+import { refreshToken } from "@/services/auth/refreshToken";
 
 const MessageBox: React.FC = () => {
   const { selectedRoom } = useContext(AuthContext);
@@ -15,6 +16,7 @@ const MessageBox: React.FC = () => {
     try {
       if (!selectedRoom) return;
       const csrfToken = getCsrfCookie();
+      const accessToken = await refreshToken();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/messages?room=${selectedRoom}`,
         {
@@ -22,6 +24,7 @@ const MessageBox: React.FC = () => {
           headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": csrfToken,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );

@@ -10,8 +10,7 @@ import json
 from database.dynamodb import DynamoDB
 from formatters.dynamodb import format_rooms, format_messages
 
-from authentication.backend import JSONWebTokenAuthentication
-
+from authentication.jwt_auth_required import jwt_auth_required
 red = '\033[91m'
 reset = '\033[0m'
 
@@ -21,11 +20,10 @@ def index(request):
     return JsonResponse("Hello, world. You're at the polls index.")
 
 @require_http_methods(["POST", "GET"])
-def user(request):
+@jwt_auth_required
+def user(request, email):
     if request.method == 'POST':
         try:
-            body = json.loads(request.body)
-            email = body['email']
             dynamodb.create_user(email)
             response_data = {'message': 'User Created'}
             return JsonResponse(response_data, status=200, content_type='application/json')
@@ -50,10 +48,8 @@ def user(request):
 # Create rooms and get rooms
 @ensure_csrf_cookie
 @require_http_methods(["POST", "GET", "OPTIONS"])
-def room(request):
-    auth = JSONWebTokenAuthentication()
-    email = auth.authenticate(request)
-    print("EMAIL: ", email, flush=True)
+@jwt_auth_required
+def room(request, email):
     if request.method == 'POST':
         try:
             body = json.loads(request.body)
@@ -82,11 +78,11 @@ def room(request):
         return JsonResponse({'message': 'Invalid Request'}, status=400, content_type='application/json')
 
 @require_http_methods(["POST", "GET"])
-def messages(request):
+@jwt_auth_required
+def messages(request, email):
     if request.method == "POST":
         try:
             body = json.loads(request.body)
-            email = body['email']
             message = body['message']
             room = body['room']
             data = dynamodb.create_message(room, message, email)

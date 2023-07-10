@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import { getCsrfCookie } from "@/utils/get-csrf-cookies";
 import { AuthContext } from "@/contexts/auth.context";
 import { MessageItemProps } from "@/utils/types";
-
+import { refreshToken } from "@/services/auth/refreshToken";
 interface CreateNewMessageBoxProps {
   setCurrentMessages: React.Dispatch<MessageItemProps[]>;
   currentMessages: MessageItemProps[];
@@ -30,13 +30,13 @@ const CreateNewMessageBox: React.FC<CreateNewMessageBoxProps> = (props) => {
         email: user.email,
       };
 
-      console.log(JSON.stringify(input));
-
+      const accessToken = await refreshToken();
       const response = await fetch("http://localhost:8080/api/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": csrfToken,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(input),
         credentials: "include",

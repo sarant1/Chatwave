@@ -25,7 +25,7 @@ class DynamoDB():
             TableName=self.table
             )
     
-    def create_user(self, username):
+    def create_user(self, username, cognito_id):
         return self.client.put_item(Item={
         'pk': {'S': f'USER#{username}' },
         'sk': {'S': 'A'},

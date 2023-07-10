@@ -70,6 +70,38 @@ export default function Signin() {
       if (err instanceof ZodError) {
         setError(err.issues[0].message);
       }
+      if (err instanceof Error) {
+        setIsLoading(false);
+        const errorResponse: ErrorResponse = ErrorManager.handle(err);
+
+        toast({
+          title: errorResponse.title,
+          description: errorResponse.message,
+          status: "error",
+          position: "top",
+          duration: 5000,
+          isClosable: true,
+        });
+        console.log(errorResponse);
+
+        if (errorResponse.title === "User is not confirmed") {
+          setTimeout(() => {
+            toast({
+              title: "Redirection Notice",
+              description:
+                "You're about to be redirected to the code verification page",
+              status: "warning",
+              position: "top",
+              duration: 4000,
+              isClosable: true,
+            });
+
+            setTimeout(() => {
+              router.push(`/auth/verify?email=${email}`);
+            }, 4000);
+          }, 6000);
+        }
+      }
       setIsLoading(false);
     }
   };

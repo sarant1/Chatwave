@@ -26,7 +26,7 @@ import { logIn } from "@/services/auth/logIn";
 import { LoginProps, LoginSchema } from "@/utils/validators/login.validator";
 import { useAuth } from "@/hooks/useAuth";
 import { ErrorManager, ErrorResponse } from "@/utils/exceptions/errorManager";
-
+import { ZodError } from "zod";
 import amplifyConfigure from "@/utils/configure-amplify";
 
 // run in every auth page
@@ -37,6 +37,8 @@ export default function Signin() {
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
   const toast = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>("");
 
   useAuth();
 
@@ -45,22 +47,17 @@ export default function Signin() {
     password: "123Testing!",
   };
 
-  const [errors, setError] = useState<ErrorResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
   //TODO FIX ERROR HANDLING
 
   const handleSubmit = async () => {
-    setIsLoading(true);
+    const signUpData: LoginProps = {
+      email: email,
+      password: password,
+    };
     try {
-      const signUpData: LoginProps = {
-        email: email,
-        password: password,
-      };
+      setIsLoading(true);
       LoginSchema.parse(signUpData);
-
       await logIn(signUpData);
-
       toast({
         title: "Logged in",
         description: "You've been successfully logged in",
@@ -70,39 +67,10 @@ export default function Signin() {
         isClosable: true,
       });
     } catch (err) {
-      if (err instanceof Error) {
-        setIsLoading(false);
-        const errorResponse: ErrorResponse = ErrorManager.handle(err.name);
-        setError(errorResponse);
-
-        toast({
-          title: errorResponse.title,
-          description: errorResponse.message,
-          status: "error",
-          position: "top",
-          duration: 5000,
-          isClosable: true,
-        });
-        console.log(errorResponse);
-
-        if (errorResponse.title === "User is not confirmed") {
-          setTimeout(() => {
-            toast({
-              title: "Redirection Notice",
-              description:
-                "You're about to be redirected to the code verification page",
-              status: "warning",
-              position: "top",
-              duration: 4000,
-              isClosable: true,
-            });
-
-            setTimeout(() => {
-              router.push(`/auth/verify?email=${email}`);
-            }, 4000);
-          }, 6000);
-        }
+      if (err instanceof ZodError) {
+        setError(err.issues[0].message);
       }
+      setIsLoading(false);
     }
   };
 
@@ -125,20 +93,25 @@ export default function Signin() {
             boxShadow={"lg"}
             p={8}
           >
+            <Text display="flex" justifyContent="center" color="red.300" mb={1}>
+              {error}
+            </Text>
             <Stack spacing={4}>
-              <FormControl id="email" isInvalid={!!errors}>
+              <FormControl id="email" isInvalid={false}>
                 <FormLabel>Email address</FormLabel>
                 <Input
                   type="email"
+                  value={email}
                   autoComplete="off"
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </FormControl>
 
-              <FormControl id="password" isInvalid={!!errors}>
+              <FormControl id="password" isInvalid={false}>
                 <FormLabel>Password</FormLabel>
                 <Input
                   type="password"
+                  value={password}
                   autoComplete="off"
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -184,10 +157,9 @@ export default function Signin() {
                 onClick={() => {
                   setEmail(guestCredentails.email);
                   setPassword(guestCredentails.password);
-                  handleSubmit();
                 }}
               >
-                Continue as Guest User
+                Use Guest Credentials
               </Button>
 
               <Button

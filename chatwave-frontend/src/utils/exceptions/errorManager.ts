@@ -12,6 +12,7 @@ export interface ErrorResponse {
 
 export class ErrorManager {
   static handle(err: Error): ErrorResponse {
+    console.log(err);
     switch (err.name) {
       case AuthError.UserNotConfirmedException:
         return {

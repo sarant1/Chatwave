@@ -1,0 +1,113 @@
+﻿type ChatWave {
+  pk: String!
+  sk: String!
+}
+
+type Message {
+  pk: String!
+  sk: String!
+  message: String!
+  sender_id: String!
+  key: String!
+  created_at: String!
+}
+
+input CreateMessageInput {
+  pk: String # ROOM#ROOM_ID
+  sk: String # MESSAGE#TIMESTAMP
+  message: String!
+  sender_id: String
+  key: String
+  created_at: String
+}
+
+type Query {
+  getMessages(pk: String!): [Message]
+}
+
+type Mutation {
+  createMessage(roomId: ID!, input: CreateMessageInput!): Message
+}
+
+type Subscription {
+  onCreateMessage(roomId: ID!): Message
+    @aws_subscribe(mutations: ["createMessage"])
+}
+# type ChatWaveConnection {
+#   items: [ChatWave]
+#   nextToken: String
+# }
+
+# type Query {
+#   getChatWave(pk: String!): ChatWave
+#   listChatWaves(filter: TableChatWaveFilterInput, limit: Int, nextToken: String): ChatWaveConnection
+# }
+
+# input DeleteChatWaveInput {
+#   pk: String!
+# }
+#
+# input TableBooleanFilterInput {
+#   eq: Boolean
+#   ne: Boolean
+# }
+#
+# input TableChatWaveFilterInput {
+#   pk: TableStringFilterInput
+#   sk: TableStringFilterInput
+# }
+#
+# input TableFloatFilterInput {
+#   between: [Float]
+#   contains: Float
+#   eq: Float
+#   ge: Float
+#   gt: Float
+#   le: Float
+#   lt: Float
+#   ne: Float
+#   notContains: Float
+# }
+#
+# input TableIDFilterInput {
+#   beginsWith: ID
+#   between: [ID]
+#   contains: ID
+#   eq: ID
+#   ge: ID
+#   gt: ID
+#   le: ID
+#   lt: ID
+#   ne: ID
+#   notContains: ID
+# }
+#
+# input TableIntFilterInput {
+#   between: [Int]
+#   contains: Int
+#   eq: Int
+#   ge: Int
+#   gt: Int
+#   le: Int
+#   lt: Int
+#   ne: Int
+#   notContains: Int
+# }
+#
+# input TableStringFilterInput {
+#   beginsWith: String
+#   between: [String]
+#   contains: String
+#   eq: String
+#   ge: String
+#   gt: String
+#   le: String
+#   lt: String
+#   ne: String
+#   notContains: String
+# }
+#
+# input UpdateChatWaveInput {
+#   pk: String!
+#   sk: String
+# }

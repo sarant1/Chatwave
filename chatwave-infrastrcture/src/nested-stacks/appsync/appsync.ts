@@ -15,6 +15,7 @@ export class AppSyncNestedStack extends cdk.NestedStack {
   public sourceTable: appsync.DynamoDbDataSource;
   public messageResolver: appsync.Resolver;
   public roomResolver: appsync.Resolver;
+  public getRoomResolver: appsync.Resolver;
 
   constructor(scope: Construct, id: string, props: AppSyncNestedStackProps) {
     super(scope, id, props);
@@ -34,12 +35,10 @@ export class AppSyncNestedStack extends cdk.NestedStack {
       },
       xrayEnabled: false,
     });
-
     this.sourceTable = this.api.addDynamoDbDataSource(
       "DynamoDataSource",
       props.dynamoDbTable.table
     );
-
     const createMessageCode = new appsync.AppsyncFunction(
       this,
       "createMessageFunction",
@@ -53,7 +52,6 @@ export class AppSyncNestedStack extends cdk.NestedStack {
         runtime: appsync.FunctionRuntime.JS_1_0_0,
       }
     );
-
     const createRoomCode = new appsync.AppsyncFunction(
       this,
       "createRoomFunction",
@@ -67,6 +65,25 @@ export class AppSyncNestedStack extends cdk.NestedStack {
         runtime: appsync.FunctionRuntime.JS_1_0_0,
       }
     );
+    const getRoomCode = new appsync.AppsyncFunction(this, "getRoomFunction", {
+      name: "getRoom",
+      api: this.api,
+      dataSource: this.sourceTable,
+      code: appsync.Code.fromAsset(
+        path.join(__dirname, "graphql/functions/getRooms.js")
+      ),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+    });
+    this.getRoomResolver = new appsync.Resolver(this, "GetRoomResolver", {
+      api: this.api,
+      typeName: "Query",
+      fieldName: "listRooms",
+      code: appsync.Code.fromAsset(
+        path.join(__dirname, "graphql/resolvers/getRoomsForUserResolver.js")
+      ),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      pipelineConfig: [getRoomCode],
+    });
     this.messageResolver = new appsync.Resolver(
       this,
       "MessagePipelineResolver",

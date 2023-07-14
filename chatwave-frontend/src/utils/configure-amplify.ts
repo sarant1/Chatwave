@@ -7,6 +7,10 @@ const awsExports = {
   aws_user_pools_id: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID, // replace with correct user pool id
   aws_user_pools_web_client_id: process.env.NEXT_PUBLIC_COGNITO_WEB_CLIENT_ID, // replace with correct user pool client id
   oauth: {},
+  aws_appsync_graphqlEndpoint: process.env.NEXT_PUBLIC_APPSYNC_GRAPHQL_ENDPOINT,
+  aws_appsync_region: process.env.NEXT_PUBLIC_AWS_REGION,
+  aws_appsync_authenticationType: "AMAZON_COGNITO_USER_POOLS",
+  aws_appsync_apiKey: null,
 };
 
 const amplifyConfigure = () => {

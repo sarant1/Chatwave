@@ -22,6 +22,7 @@ export class DynamoDBTableStack extends cdk.NestedStack {
       readCapacity: 1,
       writeCapacity: 1,
       billingMode: dynamodb.BillingMode.PROVISIONED,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
     this.table = table;
   }

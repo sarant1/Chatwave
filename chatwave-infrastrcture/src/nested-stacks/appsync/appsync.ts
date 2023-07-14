@@ -13,8 +13,8 @@ interface AppSyncNestedStackProps extends cdk.NestedStackProps {
 export class AppSyncNestedStack extends cdk.NestedStack {
   public api: appsync.GraphqlApi;
   public sourceTable: appsync.DynamoDbDataSource;
-  // public createMessageCode: appsync.AppsyncFunction;
-  // public createRoomCode: appsync.AppsyncFunction;
+  public messageResolver: appsync.Resolver;
+  public roomResolver: appsync.Resolver;
 
   constructor(scope: Construct, id: string, props: AppSyncNestedStackProps) {
     super(scope, id, props);
@@ -40,39 +40,56 @@ export class AppSyncNestedStack extends cdk.NestedStack {
       props.dynamoDbTable.table
     );
 
-    this.sourceTable.createResolver("createMessageResolver", {
+    const createMessageCode = new appsync.AppsyncFunction(
+      this,
+      "createMessageFunction",
+      {
+        name: "createMessage",
+        api: this.api,
+        dataSource: this.sourceTable,
+        code: appsync.Code.fromAsset(
+          path.join(__dirname, "graphql/functions/createMessage.js")
+        ),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+      }
+    );
+
+    const createRoomCode = new appsync.AppsyncFunction(
+      this,
+      "createRoomFunction",
+      {
+        name: "createRoomForUser",
+        api: this.api,
+        dataSource: this.sourceTable,
+        code: appsync.Code.fromAsset(
+          path.join(__dirname, "graphql/functions/createRoomForUser.js")
+        ),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+      }
+    );
+    this.messageResolver = new appsync.Resolver(
+      this,
+      "MessagePipelineResolver",
+      {
+        api: this.api,
+        typeName: "Mutation",
+        fieldName: "createMessage",
+        code: appsync.Code.fromAsset(
+          path.join(__dirname, "graphql/resolvers/createMessageResolver.js")
+        ),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+        pipelineConfig: [createMessageCode],
+      }
+    );
+    this.roomResolver = new appsync.Resolver(this, "RoomPipelineResolver", {
+      api: this.api,
       typeName: "Mutation",
       fieldName: "createRoom",
       code: appsync.Code.fromAsset(
-        path.join(__dirname, "graphql/functions/createMessage.js")
+        path.join(__dirname, "graphql/resolvers/createRoomForUserResolver.js")
       ),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      pipelineConfig: [createRoomCode],
     });
-
-    this.sourceTable.createResolver("createRoomResolver", {
-      typeName: "Mutation",
-      fieldName: "createRoom",
-      code: appsync.Code.fromAsset(
-        path.join(__dirname, "graphql/functions/createRoomForUser.js")
-      ),
-    });
-    // this.createMessageCode = new appsync.AppsyncFunction(this, "createMessageFunction", {
-    //   name: "createMessage",
-    //   api: this.api,
-    //   dataSource: this.sourceTable,
-    //   code: appsync.Code.fromAsset(
-    //     path.join(__dirname, "functions/createMessage")
-    //   ),
-    //   runtime: appsync.FunctionRuntime.JS_1_0_0,
-    // });
-
-    // this.createRoomCode = new appsync.AppsyncFunction(this, "createRoomFunction", {
-    //   name: "createRoomForUser",
-    //   api: this.api,
-    //   dataSource: this.sourceTable,
-    //   code: appsync.Code.fromAsset(
-    //     path.join(__dirname, "functions/createRoomForUser")
-    //   ),
-    //   runtime: appsync.FunctionRuntime.JS_1_0_0,
-    // });
   }
 }

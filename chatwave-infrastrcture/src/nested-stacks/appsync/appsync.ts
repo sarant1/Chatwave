@@ -4,6 +4,7 @@ import { Construct } from "constructs";
 import path from "path";
 import { DynamoDBTableStack } from "../dynamodb-table/dynamodb";
 import { IUserPool } from "aws-cdk-lib/aws-cognito";
+
 interface AppSyncNestedStackProps extends cdk.NestedStackProps {
   dynamoDbTable: DynamoDBTableStack;
   userpool: IUserPool;
@@ -12,6 +13,8 @@ interface AppSyncNestedStackProps extends cdk.NestedStackProps {
 export class AppSyncNestedStack extends cdk.NestedStack {
   public api: appsync.GraphqlApi;
   public sourceTable: appsync.DynamoDbDataSource;
+  // public createMessageCode: appsync.AppsyncFunction;
+  // public createRoomCode: appsync.AppsyncFunction;
 
   constructor(scope: Construct, id: string, props: AppSyncNestedStackProps) {
     super(scope, id, props);
@@ -19,7 +22,7 @@ export class AppSyncNestedStack extends cdk.NestedStack {
     this.api = new appsync.GraphqlApi(this, "Api", {
       name: "chatwave-appsync-api",
       schema: appsync.SchemaFile.fromAsset(
-        path.join(__dirname, "schema/schema.graphql")
+        path.join(__dirname, "graphql/schema.graphql")
       ),
       authorizationConfig: {
         defaultAuthorization: {
@@ -33,8 +36,43 @@ export class AppSyncNestedStack extends cdk.NestedStack {
     });
 
     this.sourceTable = this.api.addDynamoDbDataSource(
-      "datasource",
+      "DynamoDataSource",
       props.dynamoDbTable.table
     );
+
+    this.sourceTable.createResolver("createMessageResolver", {
+      typeName: "Mutation",
+      fieldName: "createRoom",
+      code: appsync.Code.fromAsset(
+        path.join(__dirname, "graphql/functions/createMessage.js")
+      ),
+    });
+
+    this.sourceTable.createResolver("createRoomResolver", {
+      typeName: "Mutation",
+      fieldName: "createRoom",
+      code: appsync.Code.fromAsset(
+        path.join(__dirname, "graphql/functions/createRoomForUser.js")
+      ),
+    });
+    // this.createMessageCode = new appsync.AppsyncFunction(this, "createMessageFunction", {
+    //   name: "createMessage",
+    //   api: this.api,
+    //   dataSource: this.sourceTable,
+    //   code: appsync.Code.fromAsset(
+    //     path.join(__dirname, "functions/createMessage")
+    //   ),
+    //   runtime: appsync.FunctionRuntime.JS_1_0_0,
+    // });
+
+    // this.createRoomCode = new appsync.AppsyncFunction(this, "createRoomFunction", {
+    //   name: "createRoomForUser",
+    //   api: this.api,
+    //   dataSource: this.sourceTable,
+    //   code: appsync.Code.fromAsset(
+    //     path.join(__dirname, "functions/createRoomForUser")
+    //   ),
+    //   runtime: appsync.FunctionRuntime.JS_1_0_0,
+    // });
   }
 }

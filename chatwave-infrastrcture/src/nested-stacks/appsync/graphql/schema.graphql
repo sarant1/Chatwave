@@ -1,0 +1,57 @@
+﻿type Message {
+  pk: String
+  sk: String
+  key: String!
+  message: String!
+  sender_id: String!
+  updatedAt: String
+  roomId: String!
+}
+
+input MessageInput {
+  message: String!
+  roomId: String!
+}
+
+type Room {
+  pk: ID
+  sk: ID
+  title: String
+  latestMessage: String
+  latestMessageTime: String
+}
+
+type RoomConnection {
+  items: [Room]
+  nextToken: String
+}
+
+input RoomInput {
+  title: String!
+  message: String!
+}
+
+type User {
+  pk: String
+  sk: String
+  email: String!
+}
+
+type Mutation {
+  createRoom(input: RoomInput!): Room
+  createMessage(input: MessageInput!): Message
+  updateMessage(input: MessageInput!): Message
+}
+
+type Query {
+  listRooms: [Room]
+  listMessages(roomId: ID!): [Message]
+}
+
+type Subscription {
+  onCreateRoom: Room @aws_subscribe(mutations: ["createRoom"])
+  onCreateMessageByRoomId(roomId: ID!): Message
+    @aws_subscribe(mutations: ["createMessage"])
+  onUpdateMessageByRoomId(roomId: ID!): Message
+    @aws_subscribe(mutations: ["updateMessage"])
+}

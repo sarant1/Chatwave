@@ -10,13 +10,13 @@ export class RootStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: RootStackProps) {
     super(scope, id, props);
 
-    const cognitoUserPool = this.createCognitoStack("Cognito");
-    const dynamodDbTable = this.createDynamoDbStack("DynamoDb");
-    this.createAppSyncStack(
-      "AppSync",
-      dynamodDbTable,
-      cognitoUserPool.userPool
-    );
+    this.createCognitoStack("Cognito");
+    this.createDynamoDbStack("DynamoDbStack");
+    // this.createAppSyncStack(
+    //   "AppSync",
+    //   dynamodDbTable,
+    //   cognitoUserPool.userPool
+    // );
   }
 
   createCognitoStack(name: string) {

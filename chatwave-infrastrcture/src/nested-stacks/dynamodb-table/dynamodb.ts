@@ -9,7 +9,7 @@ export class DynamoDBTableStack extends cdk.NestedStack {
   constructor(scope: Construct, id: string, props: DynamoDbNestedStackProps) {
     super(scope, id, props);
 
-    this.table = new dynamodb.Table(this, "ChatWave-Table", {
+    const table = new dynamodb.Table(this, "ChatWave-Table", {
       tableName: "ChatWave",
       partitionKey: {
         name: "pk",
@@ -23,5 +23,6 @@ export class DynamoDBTableStack extends cdk.NestedStack {
       writeCapacity: 1,
       billingMode: dynamodb.BillingMode.PROVISIONED,
     });
+    this.table = table;
   }
 }

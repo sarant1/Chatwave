@@ -4,6 +4,7 @@ export function request(ctx) {
   const values = ctx.arguments;
   values.input.sender_id = ctx.identity.claims.email;
   values.input.key = util.autoId();
+  values.input.updatedAt = util.time.nowISO8601();
   return dynamodbPutRequest(values);
 }
 

@@ -24,6 +24,18 @@ export class DynamoDBTableStack extends cdk.NestedStack {
       billingMode: dynamodb.BillingMode.PROVISIONED,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
+    const gsiProps: dynamodb.GlobalSecondaryIndexProps = {
+      indexName: "EmailIndex",
+      partitionKey: {
+        name: "gsiPk",
+        type: dynamodb.AttributeType.STRING,
+      },
+      projectionType: dynamodb.ProjectionType.KEYS_ONLY,
+      readCapacity: 1,
+      writeCapacity: 1,
+    };
+
+    table.addGlobalSecondaryIndex(gsiProps);
     this.table = table;
   }
 }

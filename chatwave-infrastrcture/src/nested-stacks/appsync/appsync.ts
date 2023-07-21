@@ -65,6 +65,19 @@ export class AppSyncNestedStack extends cdk.NestedStack {
         runtime: appsync.FunctionRuntime.JS_1_0_0,
       }
     );
+    const createRoomGetOtherUser = new appsync.AppsyncFunction(
+      this,
+      "getOtherUserFunction",
+      {
+        name: "getOtherUser",
+        api: this.api,
+        dataSource: this.sourceTable,
+        code: appsync.Code.fromAsset(
+          path.join(__dirname, "graphql/functions/getOtherUser.js")
+        ),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+      }
+    );
     const getRoomCode = new appsync.AppsyncFunction(this, "getRoomFunction", {
       name: "getRoom",
       api: this.api,
@@ -106,7 +119,7 @@ export class AppSyncNestedStack extends cdk.NestedStack {
         path.join(__dirname, "graphql/resolvers/createRoomForUserResolver.js")
       ),
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      pipelineConfig: [createRoomCode],
+      pipelineConfig: [createRoomGetOtherUser, createRoomCode],
     });
   }
 }

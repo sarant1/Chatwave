@@ -27,9 +27,10 @@ type RoomConnection {
 }
 
 input RoomInput {
-  title: String!
+  otherUserEmail: String!
   message: String!
   sender_email: String!
+  title: String
 }
 
 type User {

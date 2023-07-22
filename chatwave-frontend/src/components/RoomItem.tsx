@@ -19,7 +19,8 @@ const RoomItem: React.FC<RoomItemProps> = (props) => {
       mb={2}
       _hover={{ cursor: "pointer", bg: "gray.300" }}
       onClick={() => {
-        props.setSelectedRoom(props.sk);
+        props.setSelectedRoom(props.roomId);
+        console.log(props.roomId);
       }}
     >
       <Flex>

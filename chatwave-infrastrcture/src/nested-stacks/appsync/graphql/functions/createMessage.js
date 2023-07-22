@@ -2,7 +2,6 @@ import { util } from "@aws-appsync/utils";
 
 export function request(ctx) {
   const values = ctx.arguments;
-  values.input.sender_id = ctx.identity.claims.email;
   values.input.key = util.autoId();
   values.input.updatedAt = util.time.nowISO8601();
   return dynamodbPutRequest(values);
@@ -21,7 +20,7 @@ function dynamodbPutRequest(values) {
     operation: "PutItem",
     key: {
       pk: { S: "ROOM#" + values.input.roomId },
-      sk: { S: "MSG" + util.time.nowISO8601() },
+      sk: { S: "MSG#" + util.time.nowISO8601() },
     },
     attributeValues: util.dynamodb.toMapValues(values.input),
   };

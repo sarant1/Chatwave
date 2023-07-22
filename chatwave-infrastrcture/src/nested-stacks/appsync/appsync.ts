@@ -16,6 +16,7 @@ export class AppSyncNestedStack extends cdk.NestedStack {
   public messageResolver: appsync.Resolver;
   public roomResolver: appsync.Resolver;
   public getRoomResolver: appsync.Resolver;
+  public listMessagesResolver: appsync.Resolver;
 
   constructor(scope: Construct, id: string, props: AppSyncNestedStackProps) {
     super(scope, id, props);
@@ -87,6 +88,29 @@ export class AppSyncNestedStack extends cdk.NestedStack {
       ),
       runtime: appsync.FunctionRuntime.JS_1_0_0,
     });
+    const listMessagesCode = new appsync.AppsyncFunction(this, "getMessages", {
+      name: "getMessages",
+      api: this.api,
+      dataSource: this.sourceTable,
+      code: appsync.Code.fromAsset(
+        path.join(__dirname, "graphql/functions/getMessages.js")
+      ),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+    });
+    this.listMessagesResolver = new appsync.Resolver(
+      this,
+      "ListMessagesResolver",
+      {
+        api: this.api,
+        typeName: "Query",
+        fieldName: "listMessages",
+        code: appsync.Code.fromAsset(
+          path.join(__dirname, "graphql/resolvers/listMessagesResolver.js")
+        ),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+        pipelineConfig: [listMessagesCode],
+      }
+    );
     this.getRoomResolver = new appsync.Resolver(this, "GetRoomResolver", {
       api: this.api,
       typeName: "Query",

@@ -4,6 +4,9 @@ export function request(ctx) {
   const values = ctx.arguments;
   values.input.sub = ctx.identity.claims.sub;
   values.input.latestMessageTime = util.time.nowISO8601();
+  values.input.avatarUrl =
+    ctx.arguments.avatarUrl ||
+    "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9";
   const otherUserUuid = ctx.stash.otherUserUuid;
   return batchWriteItemToDynamoDb(values, otherUserUuid);
 }
@@ -22,6 +25,7 @@ function batchWriteItemToDynamoDb(values, otherUserUuid) {
           pk: { S: values.input.sub },
           sk: { S: `ROOM#${uuid}` },
           title: { S: values.input.title },
+          avatarUrl: { S: values.input.avatarUrl },
           latestMessage: { S: values.input.message },
           latestMessageTime: { S: values.input.latestMessageTime },
         },
@@ -29,6 +33,7 @@ function batchWriteItemToDynamoDb(values, otherUserUuid) {
           pk: { S: otherUserUuid },
           sk: { S: `ROOM#${uuid}` },
           title: { S: values.input.otherUserEmail },
+          avatarUrl: { S: values.input.avatarUrl },
           latestMessage: { S: values.input.message },
           latestMessageTime: { S: values.input.latestMessageTime },
         },

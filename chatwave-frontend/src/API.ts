@@ -6,8 +6,8 @@ export type RoomInput = {
   otherUserEmail: string;
   message: string;
   avatarUrl?: string | null;
-  sender_email: string;
-  title?: string | null;
+  senderEmail: string;
+  title: string;
 };
 
 export type Room = {
@@ -18,12 +18,13 @@ export type Room = {
   title?: string | null;
   latestMessage?: string | null;
   latestMessageTime?: string | null;
-  roomId?: string | null;
+  roomId: string;
 };
 
 export type MessageInput = {
   message: string;
   roomId: string;
+  senderEmail: string;
 };
 
 export type Message = {
@@ -32,7 +33,7 @@ export type Message = {
   sk?: string | null;
   key: string;
   message: string;
-  sender_id: string;
+  senderEmail: string;
   updatedAt?: string | null;
   roomId: string;
 };
@@ -50,7 +51,7 @@ export type CreateRoomMutation = {
     title?: string | null;
     latestMessage?: string | null;
     latestMessageTime?: string | null;
-    roomId?: string | null;
+    roomId: string;
   } | null;
 };
 
@@ -65,7 +66,7 @@ export type CreateMessageMutation = {
     sk?: string | null;
     key: string;
     message: string;
-    sender_id: string;
+    senderEmail: string;
     updatedAt?: string | null;
     roomId: string;
   } | null;
@@ -82,7 +83,7 @@ export type UpdateMessageMutation = {
     sk?: string | null;
     key: string;
     message: string;
-    sender_id: string;
+    senderEmail: string;
     updatedAt?: string | null;
     roomId: string;
   } | null;
@@ -97,7 +98,7 @@ export type ListRoomsQuery = {
     title?: string | null;
     latestMessage?: string | null;
     latestMessageTime?: string | null;
-    roomId?: string | null;
+    roomId: string;
   } | null> | null;
 };
 
@@ -112,7 +113,7 @@ export type ListMessagesQuery = {
     sk?: string | null;
     key: string;
     message: string;
-    sender_id: string;
+    senderEmail: string;
     updatedAt?: string | null;
     roomId: string;
   } | null> | null;
@@ -127,7 +128,7 @@ export type OnCreateRoomSubscription = {
     title?: string | null;
     latestMessage?: string | null;
     latestMessageTime?: string | null;
-    roomId?: string | null;
+    roomId: string;
   } | null;
 };
 
@@ -142,7 +143,7 @@ export type OnCreateMessageByRoomIdSubscription = {
     sk?: string | null;
     key: string;
     message: string;
-    sender_id: string;
+    senderEmail: string;
     updatedAt?: string | null;
     roomId: string;
   } | null;
@@ -159,7 +160,7 @@ export type OnUpdateMessageByRoomIdSubscription = {
     sk?: string | null;
     key: string;
     message: string;
-    sender_id: string;
+    senderEmail: string;
     updatedAt?: string | null;
     roomId: string;
   } | null;

@@ -1,5 +1,4 @@
 import React, { useEffect, useContext, useState } from "react";
-import { GraphQLSubscription } from "@aws-amplify/api";
 import { Container } from "@chakra-ui/react";
 import CreateNewMessageBox from "./CreateNewMessage";
 import {
@@ -12,11 +11,28 @@ import { MessageItemProps } from "@/utils/types";
 import { AuthContext } from "@/contexts/auth.context";
 import { onCreateMessageByRoomId } from "@/graphql/subscriptions";
 import { Amplify, API, graphqlOperation } from "aws-amplify";
+import { GraphQLSubscription, GraphQLQuery } from "@aws-amplify/api";
+import * as queries from "@/graphql/queries";
+import { ListMessagesQuery } from "@/API";
 const MessageBox: React.FC = () => {
   const { selectedRoom } = useContext(AuthContext);
   const [currentMessages, setCurrentMessages] = useState<MessageItemProps[]>(
     []
   );
+
+  useEffect(() => {
+    fetchMessages();
+  }, [selectedRoom]);
+  // query messages
+  const fetchMessages = async () => {
+    if (!selectedRoom) return;
+    const messages = await API.graphql<GraphQLQuery<ListMessagesQuery>>(
+      graphqlOperation(queries.listMessages, { roomId: selectedRoom })
+    );
+    console.log(messages.data?.listMessages);
+    setCurrentMessages(messages.data?.listMessages as any);
+  };
+  // subscribe to messages for that room
 
   // const subscribeToMessages = () => {
   //   const sub = API.graphql<
@@ -56,8 +72,8 @@ const MessageBox: React.FC = () => {
             <MessageItem
               key={message.key}
               message={message.message}
-              created_at={message.created_at}
-              sender_id={message.sender_id}
+              updatedAt={message.updatedAt}
+              senderEmail={message.senderEmail}
             />
           ))}
       </Container>

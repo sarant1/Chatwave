@@ -16,11 +16,11 @@ input MessageInput {
 type Room {
   pk: ID
   sk: ID
-  roomId: String
   avatarUrl: String
   title: String
   latestMessage: String
   latestMessageTime: String
+  roomId: String
 }
 
 type RoomConnection {
@@ -31,6 +31,7 @@ type RoomConnection {
 input RoomInput {
   otherUserEmail: String!
   message: String!
+  avatarUrl: String
   sender_email: String!
   title: String
 }

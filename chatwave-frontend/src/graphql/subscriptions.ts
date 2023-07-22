@@ -22,7 +22,7 @@ export const onCreateMessageByRoomId = /* GraphQL */ `
       sk
       key
       message
-      sender_id
+      senderEmail
       updatedAt
       roomId
     }
@@ -35,7 +35,7 @@ export const onUpdateMessageByRoomId = /* GraphQL */ `
       sk
       key
       message
-      sender_id
+      senderEmail
       updatedAt
       roomId
     }

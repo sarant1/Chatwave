@@ -15,7 +15,7 @@ export interface Room {
 
 export interface MessageItemProps {
   key: string;
-  created_at: string;
+  updatedAt: string;
   message: string;
-  sender_id: string;
+  senderEmail: string;
 }

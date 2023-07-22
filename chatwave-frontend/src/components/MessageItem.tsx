@@ -10,15 +10,15 @@ const MessageItem: React.FC<MessageItemProps> = (props) => {
   return (
     <Container
       backgroundColor={
-        props.sender_id !== user?.email ? "messenger.300" : "green.100"
+        props.senderEmail !== user?.email ? "messenger.300" : "green.100"
       }
       p={2}
       mt="2px"
       borderRadius="lg"
       w="auto"
       maxW="60%"
-      marginInlineStart={props.sender_id === user?.email ? "auto" : 0}
-      marginInlineEnd={props.sender_id === user?.email ? 0 : "auto"}
+      marginInlineStart={props.senderEmail === user?.email ? "auto" : 0}
+      marginInlineEnd={props.senderEmail === user?.email ? 0 : "auto"}
       justifyContent="center"
       alignItems="center"
       display="flex"

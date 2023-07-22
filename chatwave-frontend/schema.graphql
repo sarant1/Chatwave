@@ -3,7 +3,7 @@
   sk: String
   key: String!
   message: String!
-  sender_id: String!
+  senderEmail: String!
   updatedAt: String
   roomId: String!
 }
@@ -11,6 +11,7 @@
 input MessageInput {
   message: String!
   roomId: String!
+  senderEmail: String!
 }
 
 type Room {
@@ -20,7 +21,7 @@ type Room {
   title: String
   latestMessage: String
   latestMessageTime: String
-  roomId: String
+  roomId: String!
 }
 
 type RoomConnection {
@@ -32,8 +33,8 @@ input RoomInput {
   otherUserEmail: String!
   message: String!
   avatarUrl: String
-  sender_email: String!
-  title: String
+  senderEmail: String!
+  title: String!
 }
 
 type User {

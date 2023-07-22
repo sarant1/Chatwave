@@ -22,7 +22,7 @@ export const listMessages = /* GraphQL */ `
       sk
       key
       message
-      sender_id
+      senderEmail
       updatedAt
       roomId
     }

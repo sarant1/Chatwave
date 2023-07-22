@@ -18,13 +18,10 @@ export const createRoom = /* GraphQL */ `
 export const createMessage = /* GraphQL */ `
   mutation CreateMessage($input: MessageInput!) {
     createMessage(input: $input) {
-      pk
-      sk
       key
       message
       senderEmail
       updatedAt
-      roomId
     }
   }
 `;

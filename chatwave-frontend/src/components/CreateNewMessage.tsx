@@ -4,6 +4,10 @@ import { getCsrfCookie } from "@/utils/get-csrf-cookies";
 import { AuthContext } from "@/contexts/auth.context";
 import { MessageItemProps } from "@/utils/types";
 import { refreshToken } from "@/services/auth/refreshToken";
+import { GraphQLQuery } from "@aws-amplify/api";
+import { API } from "aws-amplify";
+import * as mutations from "@/graphql/mutations";
+import { CreateMessageMutation } from "@/API";
 interface CreateNewMessageBoxProps {
   setCurrentMessages: React.Dispatch<MessageItemProps[]>;
   currentMessages: MessageItemProps[];
@@ -15,39 +19,29 @@ const CreateNewMessageBox: React.FC<CreateNewMessageBoxProps> = (props) => {
   const { user, selectedRoom } = useContext(AuthContext);
 
   const handleSubmit = async () => {
+    if (!selectedRoom || !user) return;
     try {
       setIsLoading(true);
-      const csrfToken = getCsrfCookie();
-      console.log("csrfToken:", csrfToken);
-      if (!user) {
-        return;
-      }
-
-      // todo change this to use the user access token
-      const input = {
-        room: selectedRoom,
-        message: message,
-        email: user.email,
-      };
-
-      const accessToken = await refreshToken();
-      const response = await fetch("http://localhost:8080/api/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrfToken,
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(input),
-        credentials: "include",
-      });
-      const data: MessageItemProps = await response.json();
-      setMessage("");
-      props.setCurrentMessages([data, ...props.currentMessages]);
-    } catch (error: any) {
-      console.log(error);
-    }
+      const newMessage = await API.graphql<GraphQLQuery<CreateMessageMutation>>(
+        {
+          query: mutations.createMessage,
+          variables: {
+            input: {
+              message: message,
+              roomId: selectedRoom,
+              senderEmail: user.email,
+            },
+          },
+        }
+      );
+      console.log(newMessage);
+      props.setCurrentMessages([
+        newMessage.data?.createMessage as MessageItemProps,
+        ...props.currentMessages,
+      ]);
+    } catch (error) {}
     setIsLoading(false);
+    setMessage("");
   };
 
   return (

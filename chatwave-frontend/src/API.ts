@@ -3,153 +3,162 @@
 //  This file was automatically generated and should not be edited.
 
 export type RoomInput = {
-  title: string,
-  message: string,
+  otherUserEmail: string;
+  message: string;
+  sender_email: string;
+  title?: string | null;
 };
 
 export type Room = {
-  __typename: "Room",
-  pk?: string | null,
-  sk?: string | null,
-  title?: string | null,
-  latestMessage?: string | null,
-  latestMessageTime?: string | null,
+  __typename: "Room";
+  pk?: string | null;
+  sk?: string | null;
+  avatarUrl?: string;
+  title?: string | null;
+  latestMessage?: string | null;
+  latestMessageTime?: string | null;
 };
 
 export type MessageInput = {
-  message: string,
-  roomId: string,
+  message: string;
+  roomId: string;
 };
 
 export type Message = {
-  __typename: "Message",
-  pk?: string | null,
-  sk?: string | null,
-  key: string,
-  message: string,
-  sender_id: string,
-  updatedAt?: string | null,
-  roomId: string,
+  __typename: "Message";
+  pk?: string | null;
+  sk?: string | null;
+  key: string;
+  message: string;
+  sender_id: string;
+  updatedAt?: string | null;
+  roomId: string;
 };
 
 export type CreateRoomMutationVariables = {
-  input: RoomInput,
+  input: RoomInput;
 };
 
 export type CreateRoomMutation = {
-  createRoom?:  {
-    __typename: "Room",
-    pk?: string | null,
-    sk?: string | null,
-    title?: string | null,
-    latestMessage?: string | null,
-    latestMessageTime?: string | null,
-  } | null,
+  createRoom?: {
+    __typename: "Room";
+    pk?: string | null;
+    sk?: string | null;
+    avatarUrl?: string | null;
+    roomId?: string | null;
+    title?: string | null;
+    latestMessage?: string | null;
+    latestMessageTime?: string | null;
+  } | null;
 };
 
 export type CreateMessageMutationVariables = {
-  input: MessageInput,
+  input: MessageInput;
 };
 
 export type CreateMessageMutation = {
-  createMessage?:  {
-    __typename: "Message",
-    pk?: string | null,
-    sk?: string | null,
-    key: string,
-    message: string,
-    sender_id: string,
-    updatedAt?: string | null,
-    roomId: string,
-  } | null,
+  createMessage?: {
+    __typename: "Message";
+    pk?: string | null;
+    sk?: string | null;
+    key: string;
+    message: string;
+    sender_id: string;
+    updatedAt?: string | null;
+    roomId: string;
+  } | null;
 };
 
 export type UpdateMessageMutationVariables = {
-  input: MessageInput,
+  input: MessageInput;
 };
 
 export type UpdateMessageMutation = {
-  updateMessage?:  {
-    __typename: "Message",
-    pk?: string | null,
-    sk?: string | null,
-    key: string,
-    message: string,
-    sender_id: string,
-    updatedAt?: string | null,
-    roomId: string,
-  } | null,
+  updateMessage?: {
+    __typename: "Message";
+    pk?: string | null;
+    sk?: string | null;
+    key: string;
+    message: string;
+    sender_id: string;
+    updatedAt?: string | null;
+    roomId: string;
+  } | null;
 };
 
 export type ListRoomsQuery = {
-  listRooms?:  Array< {
-    __typename: "Room",
-    pk?: string | null,
-    sk?: string | null,
-    title?: string | null,
-    latestMessage?: string | null,
-    latestMessageTime?: string | null,
-  } | null > | null,
+  listRooms?: Array<{
+    __typename: "Room";
+    pk?: string | null;
+    sk?: string | null;
+    avatarUrl?: string | null;
+    roomId?: string | null;
+    title?: string | null;
+    latestMessage?: string | null;
+    latestMessageTime?: string | null;
+  } | null> | null;
 };
 
 export type ListMessagesQueryVariables = {
-  roomId: string,
+  roomId: string;
 };
 
 export type ListMessagesQuery = {
-  listMessages?:  Array< {
-    __typename: "Message",
-    pk?: string | null,
-    sk?: string | null,
-    key: string,
-    message: string,
-    sender_id: string,
-    updatedAt?: string | null,
-    roomId: string,
-  } | null > | null,
+  listMessages?: Array<{
+    __typename: "Message";
+    pk?: string | null;
+    sk?: string | null;
+    key: string;
+    message: string;
+    sender_id: string;
+    updatedAt?: string | null;
+    roomId: string;
+  } | null> | null;
 };
 
 export type OnCreateRoomSubscription = {
-  onCreateRoom?:  {
-    __typename: "Room",
-    pk?: string | null,
-    sk?: string | null,
-    title?: string | null,
-    latestMessage?: string | null,
-    latestMessageTime?: string | null,
-  } | null,
+  onCreateRoom?: {
+    __typename: "Room";
+    pk?: string | null;
+    sk?: string | null;
+    avatarUrl?: string | null;
+    roomId?: string | null;
+    title?: string | null;
+    latestMessage?: string | null;
+    latestMessageTime?: string | null;
+  } | null;
 };
 
 export type OnCreateMessageByRoomIdSubscriptionVariables = {
-  roomId: string,
+  roomId: string;
 };
 
 export type OnCreateMessageByRoomIdSubscription = {
-  onCreateMessageByRoomId?:  {
-    __typename: "Message",
-    pk?: string | null,
-    sk?: string | null,
-    key: string,
-    message: string,
-    sender_id: string,
-    updatedAt?: string | null,
-    roomId: string,
-  } | null,
+  onCreateMessageByRoomId?: {
+    __typename: "Message";
+    pk?: string | null;
+    sk?: string | null;
+    key: string;
+    message: string;
+    sender_id: string;
+    updatedAt?: string | null;
+    roomId: string;
+  } | null;
 };
 
 export type OnUpdateMessageByRoomIdSubscriptionVariables = {
-  roomId: string,
+  roomId: string;
 };
 
 export type OnUpdateMessageByRoomIdSubscription = {
-  onUpdateMessageByRoomId?:  {
-    __typename: "Message",
-    pk?: string | null,
-    sk?: string | null,
-    key: string,
-    message: string,
-    sender_id: string,
-    updatedAt?: string | null,
-    roomId: string,
-  } | null,
+  onUpdateMessageByRoomId?: {
+    __typename: "Message";
+    pk?: string | null;
+    sk?: string | null;
+    key: string;
+    message: string;
+    sender_id: string;
+    updatedAt?: string | null;
+    roomId: string;
+  } | null;
 };

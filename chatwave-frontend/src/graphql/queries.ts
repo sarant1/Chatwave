@@ -7,6 +7,8 @@ export const listRooms = /* GraphQL */ `
     listRooms {
       pk
       sk
+      avatarUrl
+      roomId
       title
       latestMessage
       latestMessageTime

@@ -55,7 +55,8 @@ test/__snapshots__
 yarn.lock 
 .env
 *.env
-
+pyenv/*
+pyenv
 path/*
 path
 __pycache__

@@ -7,6 +7,8 @@ export const onCreateRoom = /* GraphQL */ `
     onCreateRoom {
       pk
       sk
+      avatarUrl
+      roomId
       title
       latestMessage
       latestMessageTime

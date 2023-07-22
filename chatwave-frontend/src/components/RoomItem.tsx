@@ -1,9 +1,11 @@
 import { Avatar, Box, Container, Flex, Text } from "@chakra-ui/react";
 import React from "react";
-import { Room } from "@/utils/types";
+import { Room } from "@/API";
 
 interface RoomItemProps extends Room {
-  setSelectedRoom: React.Dispatch<React.SetStateAction<string | null>>;
+  setSelectedRoom: React.Dispatch<
+    React.SetStateAction<string | null | undefined>
+  >;
 }
 
 const RoomItem: React.FC<RoomItemProps> = (props) => {
@@ -17,17 +19,17 @@ const RoomItem: React.FC<RoomItemProps> = (props) => {
       mb={2}
       _hover={{ cursor: "pointer", bg: "gray.300" }}
       onClick={() => {
-        props.setSelectedRoom(props.room_id);
+        props.setSelectedRoom(props.sk);
       }}
     >
       <Flex>
-        <Avatar size="md" mr={3} src={props.avatar_url} />
+        <Avatar size="md" mr={3} src={props.avatarUrl} />
         <Flex w="full" flexDir={"column"}>
           <Flex justifyContent="space-between" w="full">
             <Text fontWeight="bold">{props.title}</Text>
-            <Text color="gray.600">{props.latest_message_time}</Text>
+            <Text color="gray.600">{props.latestMessageTime}</Text>
           </Flex>
-          <Text>{props.latest_message}</Text>
+          <Text>{props.latestMessage}</Text>
         </Flex>
       </Flex>
     </Box>

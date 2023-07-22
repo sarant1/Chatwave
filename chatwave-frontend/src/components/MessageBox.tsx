@@ -1,44 +1,39 @@
 import React, { useEffect, useContext, useState } from "react";
+import { GraphQLSubscription } from "@aws-amplify/api";
 import { Container } from "@chakra-ui/react";
 import CreateNewMessageBox from "./CreateNewMessage";
+import {
+  OnCreateMessageByRoomIdSubscription,
+  OnCreateMessageByRoomIdSubscriptionVariables,
+} from "@/API";
+import * as subscriptions from "@/graphql/subscriptions";
 import MessageItem from "@/components/MessageItem";
 import { MessageItemProps } from "@/utils/types";
 import { AuthContext } from "@/contexts/auth.context";
-import { getCsrfCookie } from "@/utils/get-csrf-cookies";
-import { refreshToken } from "@/services/auth/refreshToken";
-
+import { onCreateMessageByRoomId } from "@/graphql/subscriptions";
+import { Amplify, API, graphqlOperation } from "aws-amplify";
 const MessageBox: React.FC = () => {
   const { selectedRoom } = useContext(AuthContext);
   const [currentMessages, setCurrentMessages] = useState<MessageItemProps[]>(
     []
   );
-  const fetchMessages = async () => {
-    try {
-      if (!selectedRoom) return;
-      const csrfToken = getCsrfCookie();
-      const accessToken = await refreshToken();
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/messages?room=${selectedRoom}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      const data = await response.json();
-      console.log(data);
-      setCurrentMessages(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  useEffect(() => {
-    fetchMessages();
-  }, [selectedRoom]);
+  // const subscribeToMessages = () => {
+  //   const sub = API.graphql<
+  //     GraphQLSubscription<OnCreateMessageByRoomIdSubscription>
+  //   >(
+  //     graphqlOperation(subscriptions.onCreateMessageByRoomId, {
+  //       roomId: { selectedRoom },
+  //     })
+  //   ).subscribe({
+  //     // Update current messages here on subscribe
+  //     next: ({ value }) => console.log(value.data?.onCreateMessageByRoomId),
+  //     error: (error) => console.warn(error),
+  //   });
+  //   console.log("SUBSCRIPTION", sub);
+  //   // Stop receiving data updates from the subscription
+  //   return () => sub.unsubscribe();
+  // };
 
   return (
     <>

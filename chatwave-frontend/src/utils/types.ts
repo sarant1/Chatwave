@@ -7,8 +7,8 @@ export interface Room {
   user: string;
   key: string;
   title: string;
-  latest_message: string;
-  latest_message_time: string;
+  latestMessage: string;
+  latestMessageTime: string;
   avatar_url: string;
   room_id: string;
 }

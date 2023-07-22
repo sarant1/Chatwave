@@ -7,6 +7,8 @@ export const createRoom = /* GraphQL */ `
     createRoom(input: $input) {
       pk
       sk
+      avatarUrl
+      roomId
       title
       latestMessage
       latestMessageTime

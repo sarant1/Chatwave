@@ -1,42 +1,35 @@
 "use client";
-import { GraphQLQuery, GraphQLSubscription } from "@aws-amplify/api";
 import React, { useContext, useEffect, useState } from "react";
 import RoomsList from "@/components/RoomsList";
 import MessageBox from "@/components/MessageBox";
 import { Flex } from "@chakra-ui/react";
-import { getCsrfCookie } from "@/utils/get-csrf-cookies";
 import { AuthContext } from "@/contexts/auth.context";
-import { Room } from "@/utils/types";
-import { refreshToken } from "@/services/auth/refreshToken";
-import { onCreateMessageByRoomId } from "@/graphql/subscriptions";
+import { Room } from "@/API";
+import { API } from "aws-amplify";
+import { GraphQLQuery } from "@aws-amplify/api";
+import * as queries from "@/graphql/queries";
+import { ListRoomsQuery } from "@/API";
 const RoomsPage: React.FC = () => {
   const { user } = useContext(AuthContext);
   const [rooms, setRooms] = useState<Room[]>([]);
 
   useEffect(() => {
-    //   fetchRooms();
+    fetchRooms();
   }, [user]);
 
-  // const fetchRooms = async () => {
-  //   if (!user) return;
-  //   try {
-  //     const csrfToken = getCsrfCookie();
-  //     const accessToken = await refreshToken();
-  //     const response = await fetch(`http://localhost:8080/api/room`, {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${accessToken}`,
-  //         "X-CSRFToken": csrfToken,
-  //       },
-  //       credentials: "include",
-  //     });
-  //     const data = await response.json();
-  //     setRooms(data);
-  //   } catch (error: any) {
-  //     console.log(error);
-  //   }
-  // };
+  const fetchRooms = async () => {
+    if (!user) return;
+    try {
+      const rooms = await API.graphql<GraphQLQuery<ListRoomsQuery>>({
+        query: queries.listRooms,
+      });
+      console.log("QUERYING ROOMs");
+      console.log(rooms.data?.listRooms);
+      setRooms(rooms.data?.listRooms as Room[]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Flex h="92vh">

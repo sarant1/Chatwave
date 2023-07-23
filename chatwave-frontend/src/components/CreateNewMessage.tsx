@@ -8,12 +8,8 @@ import { GraphQLQuery } from "@aws-amplify/api";
 import { API } from "aws-amplify";
 import * as mutations from "@/graphql/mutations";
 import { CreateMessageMutation } from "@/API";
-interface CreateNewMessageBoxProps {
-  setCurrentMessages: React.Dispatch<MessageItemProps[]>;
-  currentMessages: MessageItemProps[];
-}
 
-const CreateNewMessageBox: React.FC<CreateNewMessageBoxProps> = (props) => {
+const CreateNewMessageBox: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user, selectedRoom } = useContext(AuthContext);
@@ -35,11 +31,9 @@ const CreateNewMessageBox: React.FC<CreateNewMessageBoxProps> = (props) => {
         }
       );
       console.log(newMessage);
-      props.setCurrentMessages([
-        newMessage.data?.createMessage as MessageItemProps,
-        ...props.currentMessages,
-      ]);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
     setIsLoading(false);
     setMessage("");
   };

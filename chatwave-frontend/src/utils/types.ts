@@ -18,4 +18,7 @@ export interface MessageItemProps {
   updatedAt: string;
   message: string;
   senderEmail: string;
+  roomId: string;
+  pk?: string | null;
+  sk?: string | null;
 }

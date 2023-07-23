@@ -49,6 +49,7 @@ const RoomsList: React.FC<RoomsListProps> = ({ rooms }) => {
           key={room.sk}
           title={room.title}
           roomId={room.roomId}
+          avatarUrl={room.avatarUrl}
           latestMessage={room.latestMessage}
           latestMessageTime={room.latestMessageTime}
           setSelectedRoom={setSelectedRoom}

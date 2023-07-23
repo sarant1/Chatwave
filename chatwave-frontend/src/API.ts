@@ -14,7 +14,7 @@ export type Room = {
   __typename: "Room";
   pk?: string | null;
   sk?: string | null;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
   title?: string | null;
   latestMessage?: string | null;
   latestMessageTime?: string | null;

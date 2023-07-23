@@ -229,9 +229,6 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   ml="2"
                 >
                   <Text fontSize="sm">{user?.email}</Text>
-                  <Text fontSize="xs" color="gray.600">
-                    Admin
-                  </Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>
                   <FiChevronDown />
@@ -244,7 +241,6 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
             >
               <MenuItem>Profile</MenuItem>
               <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
               <MenuDivider />
               <MenuItem onClick={handleLogOut}>Sign out</MenuItem>
             </MenuList>

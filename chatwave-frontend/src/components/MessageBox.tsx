@@ -1,5 +1,5 @@
 "use client";
-
+import { Spinner, Flex } from "@chakra-ui/react";
 import React, { useEffect, useContext, useState } from "react";
 import { Container } from "@chakra-ui/react";
 import CreateNewMessageBox from "./CreateNewMessage";
@@ -21,6 +21,8 @@ const MessageBox: React.FC = () => {
   const [currentMessages, setCurrentMessages] = useState<MessageItemProps[]>(
     []
   );
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   useEffect(() => {
     console.log("CURRENTMESSAGES!!: ", currentMessages);
   });
@@ -30,13 +32,19 @@ const MessageBox: React.FC = () => {
   }, [selectedRoom]);
   // query messages
   const fetchMessages = async () => {
+    setIsLoading(true);
     if (!selectedRoom || currentMessages.length > 0) return;
-    const messages = await API.graphql<GraphQLQuery<ListMessagesQuery>>(
-      graphqlOperation(queries.listMessages, { roomId: selectedRoom })
-    );
-    console.log(messages.data?.listMessages);
-    setCurrentMessages(messages.data?.listMessages as MessageItemProps[]);
-    console.log(currentMessages);
+    try {
+      const messages = await API.graphql<GraphQLQuery<ListMessagesQuery>>(
+        graphqlOperation(queries.listMessages, { roomId: selectedRoom })
+      );
+      console.log(messages.data?.listMessages);
+      setCurrentMessages(messages.data?.listMessages as MessageItemProps[]);
+      console.log(currentMessages);
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
   };
   // subscribe to messages for that room
   const subscribeToMessages = () => {
@@ -74,18 +82,27 @@ const MessageBox: React.FC = () => {
         flexDirection="column-reverse"
         overflowY="scroll"
         lineHeight="1.5"
+        justifyContent={isLoading && selectedRoom ? "center" : ""}
       >
-        <CreateNewMessageBox />
-        {selectedRoom &&
-          currentMessages.map((message) => (
-            <MessageItem
-              key={message.key}
-              message={message.message}
-              updatedAt={message.updatedAt}
-              senderEmail={message.senderEmail}
-              roomId={message.roomId}
-            />
-          ))}
+        {isLoading && selectedRoom ? (
+          <Flex justifyContent="center" alignItems="center">
+            <Spinner size="xl" />
+          </Flex>
+        ) : (
+          <>
+            <CreateNewMessageBox />
+            {selectedRoom &&
+              currentMessages.map((message) => (
+                <MessageItem
+                  key={message.key}
+                  message={message.message}
+                  updatedAt={message.updatedAt}
+                  senderEmail={message.senderEmail}
+                  roomId={message.roomId}
+                />
+              ))}
+          </>
+        )}
       </Container>
     </>
   );

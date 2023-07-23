@@ -1,16 +1,5 @@
 version: "3.8"
 services:
-  chatwave-backend:
-    env_file:
-      .envbackend-django.env
-    build: ./chatwave-backend
-    ports:
-      - "8080:8080"
-    networks:
-      - chatwave-net
-    volumes:
-      - ./chatwave-backend:/chatwave-backend
-
   chatwave-frontend:
     env_file:
       - .envfrontend-nextjs.env
@@ -36,20 +25,6 @@ services:
     volumes:
       - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
-  db:
-    image: postgres:13-alpine
-    restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-    ports:
-      - '5432:5432'
-    networks:
-      - chatwave-net
-    volumes: 
-      - db:/var/lib/postgresql/data
-
-
 # the name flag is a hack to change the default prepend folder
 # name when outputting the image names
 networks:
@@ -59,4 +34,3 @@ networks:
 volumes:
   db:
     driver: local
-

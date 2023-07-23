@@ -3,19 +3,16 @@ import { Spinner, Flex } from "@chakra-ui/react";
 import React, { useEffect, useContext, useState } from "react";
 import { Container } from "@chakra-ui/react";
 import CreateNewMessageBox from "./CreateNewMessage";
-import {
-  OnCreateMessageByRoomIdSubscription,
-  OnCreateMessageByRoomIdSubscriptionVariables,
-} from "@/API";
+import { OnCreateMessageByRoomIdSubscription } from "@/API";
 import MessageItem from "@/components/MessageItem";
 import { MessageItemProps } from "@/utils/types";
 import { AuthContext } from "@/contexts/auth.context";
-import { onCreateMessageByRoomId } from "@/graphql/subscriptions";
-import { Amplify, API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import { GraphQLSubscription, GraphQLQuery } from "@aws-amplify/api";
 import * as queries from "@/graphql/queries";
 import * as subscriptions from "@/graphql/subscriptions";
 import { ListMessagesQuery } from "@/API";
+import { AiFillPicture } from "react-icons/ai";
 const MessageBox: React.FC = () => {
   const { selectedRoom } = useContext(AuthContext);
   const [currentMessages, setCurrentMessages] = useState<MessageItemProps[]>(
@@ -38,9 +35,7 @@ const MessageBox: React.FC = () => {
       const messages = await API.graphql<GraphQLQuery<ListMessagesQuery>>(
         graphqlOperation(queries.listMessages, { roomId: selectedRoom })
       );
-      console.log(messages.data?.listMessages);
       setCurrentMessages(messages.data?.listMessages as MessageItemProps[]);
-      console.log(currentMessages);
     } catch (error) {
       console.log(error);
     }
@@ -56,7 +51,7 @@ const MessageBox: React.FC = () => {
         roomId: selectedRoom,
       })
     ).subscribe({
-      // Update current messages here on subscribe
+      // Update current messages here on new message
       next: ({ value }) => {
         console.log(value.data?.onCreateMessageByRoomId);
         setCurrentMessages((prevMessages) => [

@@ -1,7 +1,0 @@
-django
-boto3
-django-cors-headers
-djangorestframework
-requests
-PyJWT
-cryptography

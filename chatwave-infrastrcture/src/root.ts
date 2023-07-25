@@ -3,12 +3,15 @@ import { Construct } from "constructs";
 import { CognitoNestedStack } from "./nested-stacks/auth/cognito";
 import { DynamoDBTableStack } from "./nested-stacks/dynamodb-table/dynamodb";
 import { AppSyncNestedStack } from "./nested-stacks/appsync/appsync";
+import { ServerlessFunctionsNestedStack } from "./nested-stacks/serverless-functions/serverless-functions";
 import { IUserPool } from "aws-cdk-lib/aws-cognito";
 interface RootStackProps extends cdk.StackProps {}
 
 export class RootStack extends cdk.Stack {
+  public projectName: string;
   constructor(scope: Construct, id: string, props: RootStackProps) {
     super(scope, id, props);
+    this.projectName = "ChatWave";
 
     const cognitoUserPool = this.createCognitoStack("Cognito");
     const dynamodDbTable = this.createDynamoDbStack("DynamoDbStack");
@@ -17,6 +20,7 @@ export class RootStack extends cdk.Stack {
       dynamodDbTable,
       cognitoUserPool.userPool
     );
+    this.createServerlessStack("ServerlessFunctions");
   }
 
   createCognitoStack(name: string) {
@@ -32,5 +36,10 @@ export class RootStack extends cdk.Stack {
     userpool: IUserPool
   ) {
     return new AppSyncNestedStack(this, name, { dynamoDbTable, userpool });
+  }
+  createServerlessStack(name: string) {
+    return new ServerlessFunctionsNestedStack(this, name, {
+      projectName: this.projectName,
+    });
   }
 }

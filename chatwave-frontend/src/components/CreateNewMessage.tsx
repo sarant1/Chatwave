@@ -1,9 +1,13 @@
-import { Textarea, Button, Flex, Spacer } from "@chakra-ui/react";
-import { useState, useContext } from "react";
-import { getCsrfCookie } from "@/utils/get-csrf-cookies";
+import {
+  Textarea,
+  Button,
+  Flex,
+  Input,
+  CloseButton,
+  Box,
+} from "@chakra-ui/react";
+import { useState, useContext, ChangeEvent } from "react";
 import { AuthContext } from "@/contexts/auth.context";
-import { MessageItemProps } from "@/utils/types";
-import { refreshToken } from "@/services/auth/refreshToken";
 import { GraphQLQuery } from "@aws-amplify/api";
 import { API } from "aws-amplify";
 import * as mutations from "@/graphql/mutations";
@@ -15,6 +19,7 @@ const CreateNewMessageBox: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [scrollHeight, setScrollHeight] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [file, setFile] = useState<File | null | undefined>(null);
   const { user, selectedRoom } = useContext(AuthContext);
 
   const handleSubmit = async () => {
@@ -33,7 +38,6 @@ const CreateNewMessageBox: React.FC = () => {
           },
         }
       );
-      console.log(newMessage);
       setScrollHeight(43);
     } catch (error) {
       console.log(error);
@@ -44,10 +48,38 @@ const CreateNewMessageBox: React.FC = () => {
 
   return (
     <Flex alignItems="end" mb={4} gap={2} mt={2}>
-      <IconButton
-        aria-label="upload picture"
-        icon={<AiFillPicture size={30} />}
-        onClick={() => console.log("upload picture")}
+      <Box position="relative" display="inline-block">
+        <IconButton
+          aria-label="upload picture"
+          icon={<AiFillPicture size={30} />}
+          onClick={(e) => {
+            e.preventDefault();
+            document.getElementById("fileinput")?.click();
+          }}
+          backgroundColor={file ? "green.200" : "none"}
+        />
+        {file && (
+          <CloseButton
+            size="sm"
+            color="red.500"
+            position="absolute"
+            top="-10px"
+            right="-10px"
+            onClick={() => setFile(null)}
+          />
+        )}
+      </Box>
+      <Input // handle file upload
+        type="file"
+        display="none"
+        id="fileinput"
+        accept=".png, .jpg, .jpeg"
+        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+          setFile(e.target.files?.[0]);
+          if (file) {
+            console.log(file);
+          }
+        }}
       />
       <Textarea
         flex="1"
@@ -58,7 +90,7 @@ const CreateNewMessageBox: React.FC = () => {
         backgroundColor="gray.300"
         resize="none"
         overflow="hidden"
-        onChange={(e) => {
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
           setMessage(e.target.value);
           // handling textarea height change
           if (e.target.value === "") {

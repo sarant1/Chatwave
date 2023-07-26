@@ -33,6 +33,18 @@ export class ServerlessFunctionsNestedStack extends cdk.NestedStack {
         bucketName: `assets.${this.projectName.toLowerCase()}.com`,
       }
     );
+    const cloudWatchLogsPolicy = new iam.PolicyDocument({
+      statements: [
+        new iam.PolicyStatement({
+          actions: [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents",
+          ],
+          resources: ["arn:aws:logs:*:*:*"],
+        }),
+      ],
+    });
     const lambdaS3AccessPolicy = new iam.PolicyDocument({
       statements: [
         new iam.PolicyStatement({
@@ -58,6 +70,7 @@ export class ServerlessFunctionsNestedStack extends cdk.NestedStack {
             assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
             inlinePolicies: {
               s3Access: lambdaS3AccessPolicy,
+              cloudWatchLogs: cloudWatchLogsPolicy,
             },
           }
         ),

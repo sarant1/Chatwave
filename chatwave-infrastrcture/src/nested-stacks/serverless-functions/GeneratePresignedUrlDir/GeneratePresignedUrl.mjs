@@ -17,6 +17,9 @@ export async function handler(event) {
     Expires: 60 * 5, //Seconds before the presigned post expires. 3600 by default.
   });
   return {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
     statusCode: 200,
     body: JSON.stringify({
       url: url,

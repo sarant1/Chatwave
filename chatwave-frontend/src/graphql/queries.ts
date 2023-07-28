@@ -20,6 +20,8 @@ export const listMessages = /* GraphQL */ `
     listMessages(roomId: $roomId) {
       pk
       sk
+      type
+      imageKey
       key
       message
       senderEmail

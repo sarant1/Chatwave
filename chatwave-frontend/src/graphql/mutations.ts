@@ -20,6 +20,8 @@ export const createMessage = /* GraphQL */ `
     createMessage(input: $input) {
       pk
       sk
+      type
+      imageKey
       key
       message
       senderEmail
@@ -33,6 +35,8 @@ export const updateMessage = /* GraphQL */ `
     updateMessage(input: $input) {
       pk
       sk
+      type
+      imageKey
       key
       message
       senderEmail

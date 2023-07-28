@@ -20,6 +20,8 @@ export const onCreateMessageByRoomId = /* GraphQL */ `
     onCreateMessageByRoomId(roomId: $roomId) {
       pk
       sk
+      type
+      imageKey
       key
       message
       senderEmail
@@ -33,6 +35,8 @@ export const onUpdateMessageByRoomId = /* GraphQL */ `
     onUpdateMessageByRoomId(roomId: $roomId) {
       pk
       sk
+      type
+      imageKey
       key
       message
       senderEmail

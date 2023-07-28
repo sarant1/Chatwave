@@ -90,7 +90,7 @@ const CreateNewMessageBox: React.FC = () => {
   };
 
   return (
-    <Flex alignItems="end" mb={4} gap={2} mt={2}>
+    <Flex alignItems="end" mb={4} gap={2} mt={2} mr={2}>
       <PhotoIconUpload
         file={file}
         setFile={setFile}

@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import RoomsList from "@/components/RoomsList";
 import MessageBox from "@/components/MessageBox";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Box } from "@chakra-ui/react";
 import { AuthContext } from "@/contexts/auth.context";
 import { Room } from "@/API";
 import { API } from "aws-amplify";

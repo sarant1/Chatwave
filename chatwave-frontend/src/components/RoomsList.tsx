@@ -15,19 +15,15 @@ interface RoomsListProps {
 
 const RoomsList: React.FC<RoomsListProps> = ({ rooms }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user, setSelectedRoom } = useContext(AuthContext);
-
-  if (rooms.length > 0) {
-    console.log(rooms);
-  }
+  const { user, selectedRoom, setSelectedRoom } = useContext(AuthContext);
 
   return (
     <Container
-      maxW={{ base: "100vw", md: "sm" }}
-      m={0}
+      maxW={{ base: "100vw", md: "lg" }}
+      display={{ base: selectedRoom ? "none" : "", xl: "block" }}
       paddingInlineStart={0}
       paddingInlineEnd={0}
-      padding={4}
+      padding={2}
       borderRight={"1px"}
       borderColor="gray.200"
     >

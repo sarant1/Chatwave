@@ -1,7 +1,7 @@
 "use client";
 import { Spinner, Flex } from "@chakra-ui/react";
 import React, { useEffect, useContext, useState } from "react";
-import { Container } from "@chakra-ui/react";
+import { Container, IconButton } from "@chakra-ui/react";
 import CreateNewMessageBox from "./CreateNewMessage";
 import { OnCreateMessageByRoomIdSubscription } from "@/API";
 import MessageItem from "@/components/MessageItem";
@@ -12,9 +12,10 @@ import { GraphQLSubscription, GraphQLQuery } from "@aws-amplify/api";
 import * as queries from "@/graphql/queries";
 import * as subscriptions from "@/graphql/subscriptions";
 import { ListMessagesQuery } from "@/API";
+import { BiArrowBack } from "react-icons/bi";
 
 const MessageBox: React.FC = () => {
-  const { selectedRoom } = useContext(AuthContext);
+  const { selectedRoom, setSelectedRoom } = useContext(AuthContext);
   const [currentMessages, setCurrentMessages] = useState<MessageItemProps[]>(
     []
   );
@@ -67,17 +68,40 @@ const MessageBox: React.FC = () => {
   };
 
   return (
-    <>
+    <Flex
+      flexDir="column"
+      w="full"
+      h="full"
+      justifyContent="center"
+      alignItems={{ base: "center", xl: "flex-start" }}
+    >
+      <IconButton
+        display={selectedRoom ? "flex" : "none"}
+        aria-label="back"
+        icon={<BiArrowBack />}
+        mx={4}
+        my={1}
+        onClick={() => {
+          setSelectedRoom(null);
+          setCurrentMessages([]);
+        }}
+      >
+        Test
+      </IconButton>
       <Container
         borderWidth="1px"
         borderRadius="lg"
-        borderColor="gray.400"
-        m={4}
-        display="flex"
+        borderColor={{ base: "", xl: "gray.400" }}
+        mx={4}
+        mb={4}
+        display={selectedRoom ? "flex" : "none"}
         flexDirection="column-reverse"
         overflowY="scroll"
         lineHeight="1.5"
+        flex="1"
         justifyContent={isLoading && selectedRoom ? "center" : ""}
+        paddingInlineStart={{ base: "2px", xl: 4 }}
+        paddingInlineEnd={{ base: "2px", xl: 3 }}
       >
         {isLoading && selectedRoom ? (
           <Flex justifyContent="center" alignItems="center">
@@ -101,7 +125,7 @@ const MessageBox: React.FC = () => {
           </>
         )}
       </Container>
-    </>
+    </Flex>
   );
 };
 

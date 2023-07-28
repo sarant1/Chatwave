@@ -6,7 +6,7 @@ export async function handler(event) {
   console.log(event);
   const client = new S3Client({ region: "us-east-1" });
   const bucket = "assets.chatwave.com";
-  const key = randomUUID() + "." + event.headers.type;
+  const key = randomUUID() + ".jpeg";
   const contentType = {
     "Content-Type": "image/jpeg",
   };
@@ -24,6 +24,7 @@ export async function handler(event) {
     body: JSON.stringify({
       url: url,
       fields: fields,
+      key: key,
     }),
   };
 }

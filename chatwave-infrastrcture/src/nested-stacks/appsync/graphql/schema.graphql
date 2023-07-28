@@ -1,15 +1,19 @@
 ﻿type Message {
   pk: String
   sk: String
+  type: String!
+  imageKey: String
   key: String!
-  message: String!
+  message: String
   senderEmail: String!
   updatedAt: String
   roomId: String!
 }
 
 input MessageInput {
-  message: String!
+  type: String! # image or text
+  imageKey: String # this will be returned from presigned url lamdba
+  message: String # populate this if it is not a photo
   roomId: String!
   senderEmail: String!
 }
@@ -32,6 +36,7 @@ type RoomConnection {
 input RoomInput {
   otherUserEmail: String!
   message: String!
+  type: String!
   avatarUrl: String
   senderEmail: String!
   title: String!

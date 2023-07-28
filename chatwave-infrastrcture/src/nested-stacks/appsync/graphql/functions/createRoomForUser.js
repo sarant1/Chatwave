@@ -42,6 +42,7 @@ function batchWriteItemToDynamoDb(values, otherUserUuid) {
         {
           pk: { S: "ROOM#" + uuid },
           sk: { S: "MSG#" + values.input.latestMessageTime },
+          type: { S: values.input.type },
           message: { S: values.input.message },
           key: { S: util.autoId() },
           roomId: { S: uuid },

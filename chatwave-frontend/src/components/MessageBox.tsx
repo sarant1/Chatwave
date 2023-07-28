@@ -12,7 +12,7 @@ import { GraphQLSubscription, GraphQLQuery } from "@aws-amplify/api";
 import * as queries from "@/graphql/queries";
 import * as subscriptions from "@/graphql/subscriptions";
 import { ListMessagesQuery } from "@/API";
-import { AiFillPicture } from "react-icons/ai";
+
 const MessageBox: React.FC = () => {
   const { selectedRoom } = useContext(AuthContext);
   const [currentMessages, setCurrentMessages] = useState<MessageItemProps[]>(
@@ -89,7 +89,9 @@ const MessageBox: React.FC = () => {
             {selectedRoom &&
               currentMessages.map((message) => (
                 <MessageItem
+                  type={message.type}
                   key={message.key}
+                  imageKey={message.imageKey}
                   message={message.message}
                   updatedAt={message.updatedAt}
                   senderEmail={message.senderEmail}

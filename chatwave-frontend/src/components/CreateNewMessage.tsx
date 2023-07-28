@@ -8,41 +8,96 @@ import { CreateMessageMutation } from "@/API";
 import PhotoIconUpload from "@/components/PhotoIconUpload";
 
 const CreateNewMessageBox: React.FC = () => {
+  const { user, selectedRoom } = useContext(AuthContext);
   const [message, setMessage] = useState<string>("");
   const [scrollHeight, setScrollHeight] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { user, selectedRoom } = useContext(AuthContext);
-  const [file, setFile] = useState<File | null | undefined>(null);
+  const [file, setFile] = useState<Blob | null | undefined>(null);
+  const [imageKey, setImageKey] = useState<string | null>(""); // this is the key to the image in S3
+  const [presignedUrl, setPresignedUrl] = useState<string | null>(null); // this is the url to upload the image to S3
+  const [formData, setFormData] = useState<FormData | null>(null);
   const defaultScrollHeight = 43;
-
-  const handleSubmit = async () => {
-    if (!selectedRoom || !user) return;
+  const submitPhotoToS3 = async () => {
+    if (!formData || !presignedUrl) return;
     try {
       setIsLoading(true);
-      const newMessage = await API.graphql<GraphQLQuery<CreateMessageMutation>>(
-        {
-          query: mutations.createMessage,
-          variables: {
-            input: {
-              // type: text
-              message: message,
-              roomId: selectedRoom,
-              senderEmail: user.email,
-            },
-          },
-        }
-      );
-      setScrollHeight(defaultScrollHeight);
+      const response = await fetch(presignedUrl, {
+        method: "POST",
+        body: formData,
+      });
+      if (response.ok) {
+        console.log("SUCCESS UPLOADING ITEM");
+      }
     } catch (error) {
       console.log(error);
     }
-    setIsLoading(false);
-    setMessage("");
+    setPresignedUrl(null);
+  };
+
+  const submitPhotoToAppSync = async () => {
+    if (!selectedRoom || !user) return;
+    const inputVals = {
+      type: "image",
+      roomId: selectedRoom,
+      senderEmail: user.email,
+      imageKey: imageKey,
+    };
+    try {
+      await API.graphql<GraphQLQuery<CreateMessageMutation>>({
+        query: mutations.createMessage,
+        variables: {
+          input: inputVals,
+        },
+      });
+      setImageKey(null);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!selectedRoom || !user) return;
+    setIsLoading(true);
+    if (file) {
+      await submitPhotoToS3();
+      await submitPhotoToAppSync();
+      setFile(null);
+    }
+    if (message.length === 0) {
+      setIsLoading(false);
+      return;
+    }
+    const inputVals = {
+      type: "text",
+      roomId: selectedRoom,
+      senderEmail: user.email,
+      message: message,
+    };
+    try {
+      await API.graphql<GraphQLQuery<CreateMessageMutation>>({
+        query: mutations.createMessage,
+        variables: {
+          input: inputVals,
+        },
+      });
+      setScrollHeight(defaultScrollHeight);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+      setMessage("");
+    }
   };
 
   return (
     <Flex alignItems="end" mb={4} gap={2} mt={2}>
-      <PhotoIconUpload file={file} setFile={setFile} />
+      <PhotoIconUpload
+        file={file}
+        setFile={setFile}
+        setImageKey={setImageKey}
+        setFormData={setFormData}
+        setPresignedUrl={setPresignedUrl}
+      />
       <Textarea
         flex="1"
         display="inline-block"

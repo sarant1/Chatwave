@@ -14,9 +14,11 @@ export interface Room {
 }
 
 export interface MessageItemProps {
+  type: string;
+  imageKey?: string;
   key: string;
   updatedAt: string;
-  message: string;
+  message?: string;
   senderEmail: string;
   roomId: string;
   pk?: string | null;

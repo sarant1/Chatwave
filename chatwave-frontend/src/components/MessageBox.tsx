@@ -20,11 +20,15 @@ const MessageBox: React.FC = () => {
     []
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [sub, setSub] = useState<any>(null);
 
   useEffect(() => {
     console.log("CURRENTMESSAGES!!: ", currentMessages);
   });
   useEffect(() => {
+    if (sub) {
+      sub.unsubscribe();
+    }
     fetchMessages();
     subscribeToMessages();
   }, [selectedRoom]);
@@ -45,23 +49,23 @@ const MessageBox: React.FC = () => {
   // subscribe to messages for that room
   const subscribeToMessages = () => {
     if (!selectedRoom || !currentMessages) return;
-    const sub = API.graphql<
-      GraphQLSubscription<OnCreateMessageByRoomIdSubscription>
-    >(
-      graphqlOperation(subscriptions.onCreateMessageByRoomId, {
-        roomId: selectedRoom,
+    setSub(
+      API.graphql<GraphQLSubscription<OnCreateMessageByRoomIdSubscription>>(
+        graphqlOperation(subscriptions.onCreateMessageByRoomId, {
+          roomId: selectedRoom,
+        })
+      ).subscribe({
+        // Update current messages here on new message
+        next: ({ value }) => {
+          console.log(value.data?.onCreateMessageByRoomId);
+          setCurrentMessages((prevMessages) => [
+            value.data?.onCreateMessageByRoomId as MessageItemProps,
+            ...prevMessages,
+          ]);
+        },
+        error: (error) => console.warn(error),
       })
-    ).subscribe({
-      // Update current messages here on new message
-      next: ({ value }) => {
-        console.log(value.data?.onCreateMessageByRoomId);
-        setCurrentMessages((prevMessages) => [
-          value.data?.onCreateMessageByRoomId as MessageItemProps,
-          ...prevMessages,
-        ]);
-      },
-      error: (error) => console.warn(error),
-    });
+    );
     console.log("SUBSCRIPTION", sub);
     // Stop receiving data updates from the subscription
     return () => sub.unsubscribe();

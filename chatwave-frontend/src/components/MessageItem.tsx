@@ -2,7 +2,6 @@ import { Container, Text, Image } from "@chakra-ui/react";
 import { MessageItemProps } from "@/utils/types";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/auth.context";
-// sender will be true if it is the current user sending the messag
 
 const MessageItem: React.FC<MessageItemProps> = (props) => {
   const { user } = useContext(AuthContext);

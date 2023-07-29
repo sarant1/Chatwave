@@ -14,8 +14,10 @@ import {
 import React from "react";
 import { useState } from "react";
 import { User } from "@/utils/types";
-import { getCsrfCookie } from "@/utils/get-csrf-cookies";
-import { refreshToken } from "@/services/auth/refreshToken";
+import { API, graphqlOperation } from "aws-amplify";
+import { GraphQLQuery } from "@aws-amplify/api";
+import * as mutations from "@/graphql/mutations";
+import { CreateRoomMutation } from "@/API";
 interface CreateMessageModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -31,33 +33,25 @@ function CreateMessageModal({
   const [message, setMessage] = useState<string>("");
 
   const handleSubmit = async () => {
+    if (!user) return;
+    const inputVals = {
+      otherUserEmail: email,
+      message: message,
+      type: "text",
+      senderEmail: user.email,
+      title: email,
+    };
     try {
-      const csrfToken = getCsrfCookie();
-      const accessToken = await refreshToken();
-      if (!user) {
-        return;
-      }
-      const input = {
-        user1: user.email,
-        user2: email,
-        message: message,
-      };
-
-      const response = await fetch("http://localhost:8080/api/room", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrfToken,
-          Authorization: `Bearer ${accessToken}`,
+      const newRoom = await API.graphql<GraphQLQuery<CreateRoomMutation>>({
+        query: mutations.createRoom,
+        variables: {
+          input: inputVals,
         },
-        body: JSON.stringify(input),
-        credentials: "include",
       });
-      const data = await response;
-      console.log(data);
     } catch (error: any) {
       console.log(error);
     }
+    onClose();
   };
 
   return (

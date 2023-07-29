@@ -2,15 +2,6 @@ import { Context } from "aws-lambda";
 const AWS = require("aws-sdk");
 const docClient = new AWS.DynamoDB.DocumentClient();
 
-type CognitoUserStatus =
-  | "UNCONFIRMED"
-  | "CONFIRMED"
-  | "EXTERNAL_PROVIDER"
-  | "ARCHIVED"
-  | "UNKNOWN"
-  | "RESET_REQUIRED"
-  | "PostConfirmation_ConfirmSignUp";
-
 type CognitoTriggerEvent = {
   version: string;
   region: string;

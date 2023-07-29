@@ -11,7 +11,7 @@ const MessageItem: React.FC<MessageItemProps> = (props) => {
     <>
       {props.type === "image" ? (
         <Image
-          src={`https://d340if90s57glw.cloudfront.net/${props.imageKey}`}
+          src={`${process.env.NEXT_PUBLIC_CLOUDFRONT_URL}/${props.imageKey}`}
           boxSize="300px"
           display="flex"
           objectFit="cover"

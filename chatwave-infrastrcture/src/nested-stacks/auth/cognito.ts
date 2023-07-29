@@ -2,11 +2,14 @@ import path from "path";
 import * as cdk from "aws-cdk-lib";
 import * as cognito from "aws-cdk-lib/aws-cognito";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as iam from "aws-cdk-lib/aws-iam";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import { getAppRootDir } from "../../utils/get-app-root-dir";
 
-interface CognitoNestedStackProps extends cdk.NestedStackProps {}
+interface CognitoNestedStackProps extends cdk.NestedStackProps {
+  dynamoDbTableName: string;
+}
 
 export class CognitoNestedStack extends cdk.NestedStack {
   public userPool: cognito.IUserPool;
@@ -16,29 +19,83 @@ export class CognitoNestedStack extends cdk.NestedStack {
     super(scope, id, props);
 
     // create cognito user pool and user pool client
-    const entryPath = path.join(
+    const forgotPasswordEntryPath = path.join(
       __dirname,
       "cognito-lambda-triggers",
       "forgot-password",
       "index.ts"
     );
+
+    const postConfirmationEntryPath = path.join(
+      __dirname,
+      "cognito-lambda-triggers",
+      "post-confirmation",
+      "index.ts"
+    );
+
     const forgotPasswordLambdaTrigger = this.createForgotPasswordLambdaTrigger(
       "CustomMessage_ForgotPassword-lambda-trigger",
-      entryPath,
+      forgotPasswordEntryPath,
       getAppRootDir()
     );
 
+    const postConfirmationLambdaTrigger =
+      this.createPostConfirmationLambdaTrigger(
+        "postConfirmation-lambda-trigger",
+        postConfirmationEntryPath,
+        getAppRootDir(),
+        props.dynamoDbTableName
+      );
+
     this.userPool = this.createCognitoUserPool(
       "chatwave-user-pool",
-      forgotPasswordLambdaTrigger
+      forgotPasswordLambdaTrigger,
+      postConfirmationLambdaTrigger
     );
-
-    // create forgot password lambda trigger
 
     this.userPoolClient = this.createCognitoClient(
       this.userPool,
       "chatwave-user-pool-client"
     );
+  }
+
+  createPostConfirmationLambdaTrigger(
+    triggerName: string,
+    entryPath: string,
+    rootAppDir: string,
+    tableName: string
+  ) {
+    return new NodejsFunction(this, triggerName, {
+      entry: entryPath,
+      handler: "index.handler",
+      runtime: lambda.Runtime.NODEJS_14_X,
+      awsSdkConnectionReuse: true,
+      depsLockFilePath: path.join(`${rootAppDir}`, "package-lock.json"),
+      environment: {
+        TABLE_NAME: tableName,
+      },
+      role: new iam.Role(this, "postConfirmation-lambda-role", {
+        assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
+        description: "Allow lambda to put item in dynamodb table",
+        inlinePolicies: {
+          dynamoDbPutItemPolicy: new iam.PolicyDocument({
+            statements: [
+              new iam.PolicyStatement({
+                actions: [
+                  "dynamodb:PutItem",
+                  "logs:CreateLogGroup",
+                  "logs:CreateLogStream",
+                  "logs:PutLogEvents",
+                ],
+                resources: [
+                  `arn:aws:dynamodb:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:table/${tableName}`,
+                ],
+              }),
+            ],
+          }),
+        },
+      }),
+    });
   }
 
   createForgotPasswordLambdaTrigger(
@@ -49,7 +106,7 @@ export class CognitoNestedStack extends cdk.NestedStack {
     return new NodejsFunction(this, triggerName, {
       entry: entryPath,
       handler: "index.handler",
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_18_X,
       depsLockFilePath: path.join(`${rootAppDir}`, "package-lock.json"),
       projectRoot: rootAppDir,
       awsSdkConnectionReuse: true,
@@ -61,12 +118,14 @@ export class CognitoNestedStack extends cdk.NestedStack {
 
   createCognitoUserPool(
     userPoolName: string,
-    lambdaTrigger: lambda.IFunction
+    forgotPasswordLambdaTrigger: lambda.IFunction,
+    postConfirmationLambdaTrigger: lambda.IFunction
   ): cognito.UserPool {
     return new cognito.UserPool(this, userPoolName, {
       userPoolName: userPoolName,
       lambdaTriggers: {
-        customMessage: lambdaTrigger,
+        customMessage: forgotPasswordLambdaTrigger,
+        postConfirmation: postConfirmationLambdaTrigger,
       },
       // case insensitive is preferred in most situations
       signInCaseSensitive: false,

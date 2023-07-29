@@ -9,12 +9,15 @@ interface RootStackProps extends cdk.StackProps {}
 
 export class RootStack extends cdk.Stack {
   public projectName: string;
+  public dynamoDbTableName: string;
+
   constructor(scope: Construct, id: string, props: RootStackProps) {
     super(scope, id, props);
     this.projectName = "ChatWave";
+    this.dynamoDbTableName = `${this.projectName}`;
 
-    const cognitoUserPool = this.createCognitoStack("Cognito");
     const dynamodDbTable = this.createDynamoDbStack("DynamoDbStack");
+    const cognitoUserPool = this.createCognitoStack("Cognito");
     this.createAppSyncStack(
       "AppSync",
       dynamodDbTable,
@@ -23,13 +26,18 @@ export class RootStack extends cdk.Stack {
     this.createServerlessStack("ServerlessFunctions");
   }
 
-  createCognitoStack(name: string) {
-    return new CognitoNestedStack(this, name, {});
+  createDynamoDbStack(name: string) {
+    return new DynamoDBTableStack(this, name, {
+      dynmaoDbTableName: this.dynamoDbTableName,
+    });
   }
 
-  createDynamoDbStack(name: string) {
-    return new DynamoDBTableStack(this, name, {});
+  createCognitoStack(name: string) {
+    return new CognitoNestedStack(this, name, {
+      dynamoDbTableName: this.dynamoDbTableName,
+    });
   }
+
   createAppSyncStack(
     name: string,
     dynamoDbTable: DynamoDBTableStack,

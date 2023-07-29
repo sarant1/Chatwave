@@ -1,14 +1,16 @@
-import { 
-  Context, 
-  Callback, 
-  Handler 
-} from 'aws-lambda';
+import { Context, Callback, Handler } from "aws-lambda";
 
-
-type CognitoUserStatus = "UNCONFIRMED" | "CONFIRMED" | "EXTERNAL_PROVIDER" | "ARCHIVED" | "UNKNOWN" | "RESET_REQUIRED" | "FORCE_CHANGE_PASSWORD"
+type CognitoUserStatus =
+  | "UNCONFIRMED"
+  | "CONFIRMED"
+  | "EXTERNAL_PROVIDER"
+  | "ARCHIVED"
+  | "UNKNOWN"
+  | "RESET_REQUIRED"
+  | "FORCE_CHANGE_PASSWORD";
 
 type CognitoTriggerEvent = {
-  version: string; 
+  version: string;
   triggerSource: string;
   region: string;
   userPoolId: string;
@@ -24,7 +26,7 @@ type CognitoTriggerEvent = {
       "cognito:user_status": CognitoUserStatus; // We expect "CONFIRMED"
       email_verified: string;
       email: string;
-    }
+    };
     codeParameter: string;
     linkParameter: string;
     usernameParameter: string | null;
@@ -34,7 +36,7 @@ type CognitoTriggerEvent = {
     emailMessage: string | null;
     emailSubject: string | null;
   };
-}
+};
 
 /*
 Forgot Password Example
@@ -65,30 +67,28 @@ Forgot Password Example
 }
 */
 
-
 // Forgot Password Email Trigger
 export const handler: Handler<CognitoTriggerEvent, any> = (
   event: CognitoTriggerEvent,
   context: Context,
-  callback: Callback<any>,
+  callback: Callback<any>
 ): void => {
-
   console.log(context);
   console.log(callback);
   console.log(event);
 
-  if (event.triggerSource === 'CustomMessage_ForgotPassword') {
+  if (event.triggerSource === "CustomMessage_ForgotPassword") {
     const { email } = event.request.userAttributes;
     const encodedEmail = encodeURIComponent(email);
     const verificationCode = event.request.codeParameter;
     const resetUrl = `${process.env.BASE_URL}/auth/reset_password?email=${encodedEmail}&verificationCode=${verificationCode}`;
-    console.log("RESET_URL", resetUrl)
+    console.log("RESET_URL", resetUrl);
 
     let message = `<a href=${resetUrl}>Click here to reset your password</a>`;
 
-    event.response.emailSubject = 'Chatwave Password Reset';
+    event.response.emailSubject = "Chatwave Password Reset";
     event.response.emailMessage = message;
   }
 
   callback(null, event);
-}
+};

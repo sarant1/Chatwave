@@ -19,7 +19,7 @@ function getMessagesForRoom(roomId) {
         ":pk": { S: `ROOM#${roomId}` },
         ":sk": { S: "MSG#" },
       },
-      ScanIndexForward: false,
     },
+    scanIndexForward: false,
   };
 }

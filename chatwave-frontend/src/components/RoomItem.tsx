@@ -9,6 +9,15 @@ interface RoomItemProps extends Room {
 }
 
 const RoomItem: React.FC<RoomItemProps> = (props) => {
+  const localItemTime = () => {
+    const date = new Date(props.latestMessageTime as string);
+    const options: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+    return date.toLocaleString("en-US", options);
+  };
   return (
     <Box
       p={3}
@@ -35,7 +44,7 @@ const RoomItem: React.FC<RoomItemProps> = (props) => {
         <Flex w="full" flexDir={"column"}>
           <Flex justifyContent="space-between" w="full">
             <Text fontWeight="bold">{props.title}</Text>
-            <Text color="gray.600">{props.latestMessageTime}</Text>
+            <Text color="gray.600">{localItemTime()}</Text>
           </Flex>
           <Text>{props.latestMessage}</Text>
         </Flex>

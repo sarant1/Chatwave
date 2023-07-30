@@ -43,7 +43,14 @@ const RoomItem: React.FC<RoomItemProps> = (props) => {
         />
         <Flex w="full" flexDir={"column"}>
           <Flex justifyContent="space-between" w="full">
-            <Text fontWeight="bold">{props.title}</Text>
+            <Text
+              fontWeight="bold"
+              maxW="70%"
+              overflowX="hidden"
+              whiteSpace={"nowrap"}
+            >
+              {props.title}
+            </Text>
             <Text color="gray.600">{localItemTime()}</Text>
           </Flex>
           <Text>{props.latestMessage}</Text>

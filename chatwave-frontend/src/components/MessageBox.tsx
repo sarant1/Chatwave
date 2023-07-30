@@ -73,7 +73,7 @@ const MessageBox: React.FC = () => {
 
   return (
     <Flex
-      display={selectedRoom ? "flex" : "none"}
+      display={{ base: selectedRoom ? "flex" : "none", xl: "flex" }}
       flexDir="column"
       w="full"
       h="full"
@@ -82,6 +82,7 @@ const MessageBox: React.FC = () => {
     >
       <IconButton
         aria-label="back"
+        display={selectedRoom ? "flex" : "none"}
         icon={<BiArrowBack />}
         mx={4}
         my={1}

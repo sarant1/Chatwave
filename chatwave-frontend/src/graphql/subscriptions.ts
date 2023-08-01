@@ -3,15 +3,15 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateRoom = /* GraphQL */ `
-  subscription OnCreateRoom {
-    onCreateRoom {
+  subscription OnCreateRoom($otherUserEmail: String!) {
+    onCreateRoom(otherUserEmail: $otherUserEmail) {
       pk
       sk
       avatarUrl
       title
+      roomId
       latestMessage
       latestMessageTime
-      roomId
     }
   }
 `;
@@ -25,21 +25,7 @@ export const onCreateMessageByRoomId = /* GraphQL */ `
       key
       message
       senderEmail
-      updatedAt
-      roomId
-    }
-  }
-`;
-export const onUpdateMessageByRoomId = /* GraphQL */ `
-  subscription OnUpdateMessageByRoomId($roomId: ID!) {
-    onUpdateMessageByRoomId(roomId: $roomId) {
-      pk
-      sk
-      type
-      imageKey
-      key
-      message
-      senderEmail
+      otherUserEmail
       updatedAt
       roomId
     }

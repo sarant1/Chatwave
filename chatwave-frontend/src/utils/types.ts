@@ -20,6 +20,7 @@ export interface MessageItemProps {
   updatedAt: string;
   message?: string;
   senderEmail: string;
+  otherUserEmail: string;
   roomId: string;
   pk?: string | null;
   sk?: string | null;

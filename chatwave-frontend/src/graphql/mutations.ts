@@ -9,9 +9,9 @@ export const createRoom = /* GraphQL */ `
       sk
       avatarUrl
       title
+      roomId
       latestMessage
       latestMessageTime
-      roomId
     }
   }
 `;
@@ -25,6 +25,7 @@ export const createMessage = /* GraphQL */ `
       key
       message
       senderEmail
+      otherUserEmail
       updatedAt
       roomId
     }
@@ -40,6 +41,7 @@ export const updateMessage = /* GraphQL */ `
       key
       message
       senderEmail
+      otherUserEmail
       updatedAt
       roomId
     }

@@ -1,10 +1,11 @@
 import { Avatar, Box, Container, Flex, Text } from "@chakra-ui/react";
+import { RoomI } from "@/contexts/auth.context";
 import React from "react";
 import { Room } from "@/API";
 
 interface RoomItemProps extends Room {
   setSelectedRoom: React.Dispatch<
-    React.SetStateAction<string | null | undefined>
+    React.SetStateAction<RoomI | null | undefined>
   >;
 }
 
@@ -28,7 +29,7 @@ const RoomItem: React.FC<RoomItemProps> = (props) => {
       mb={2}
       _hover={{ cursor: "pointer", bg: "gray.300" }}
       onClick={() => {
-        props.setSelectedRoom(props.roomId);
+        props.setSelectedRoom({ id: props.roomId, title: props.title });
         console.log(props.roomId);
       }}
     >

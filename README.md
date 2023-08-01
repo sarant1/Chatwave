@@ -50,3 +50,5 @@ amplify codegen
 
 - Subscription to new rooms being created including that user
 - update room latest message when a new message is sent
+- Delete room(conversation) possibly delete messages
+- Update latest messsages when querying rooms

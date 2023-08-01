@@ -23,6 +23,7 @@ const RoomsPage: React.FC = () => {
       const rooms = await API.graphql<GraphQLQuery<ListRoomsQuery>>({
         query: queries.listRooms,
       });
+      console.log(rooms);
       setRooms(rooms.data?.listRooms as Room[]);
     } catch (err) {
       console.log(err);

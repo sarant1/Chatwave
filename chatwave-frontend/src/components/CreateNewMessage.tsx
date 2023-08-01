@@ -38,9 +38,10 @@ const CreateNewMessageBox: React.FC = () => {
     if (!selectedRoom || !user) return;
     const inputVals = {
       type: "image",
-      roomId: selectedRoom,
+      roomId: selectedRoom.id,
       senderEmail: user.email,
       imageKey: imageKey,
+      otherUserEmail: selectedRoom.title,
     };
     try {
       await API.graphql<GraphQLQuery<CreateMessageMutation>>({
@@ -69,8 +70,9 @@ const CreateNewMessageBox: React.FC = () => {
     }
     const inputVals = {
       type: "text",
-      roomId: selectedRoom,
+      roomId: selectedRoom.id,
       senderEmail: user.email,
+      otherUserEmail: selectedRoom.title,
       message: message,
     };
     try {

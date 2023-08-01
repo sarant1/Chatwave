@@ -38,7 +38,7 @@ const MessageBox: React.FC = () => {
     if (!selectedRoom || currentMessages.length > 0) return;
     try {
       const messages = await API.graphql<GraphQLQuery<ListMessagesQuery>>(
-        graphqlOperation(queries.listMessages, { roomId: selectedRoom })
+        graphqlOperation(queries.listMessages, { roomId: selectedRoom.id })
       );
       setCurrentMessages(messages.data?.listMessages as MessageItemProps[]);
     } catch (error) {
@@ -52,7 +52,7 @@ const MessageBox: React.FC = () => {
     setSub(
       API.graphql<GraphQLSubscription<OnCreateMessageByRoomIdSubscription>>(
         graphqlOperation(subscriptions.onCreateMessageByRoomId, {
-          roomId: selectedRoom,
+          roomId: selectedRoom.id,
         })
       ).subscribe({
         // Update current messages here on new message
@@ -125,6 +125,7 @@ const MessageBox: React.FC = () => {
                   updatedAt={message.updatedAt}
                   senderEmail={message.senderEmail}
                   roomId={message.roomId}
+                  otherUserEmail={message.otherUserEmail}
                 />
               ))}
           </>

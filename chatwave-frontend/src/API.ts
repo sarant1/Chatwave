@@ -4,10 +4,10 @@
 
 export type RoomInput = {
   otherUserEmail: string,
+  senderEmail: string,
   message: string,
   type: string,
   avatarUrl?: string | null,
-  senderEmail: string,
   title: string,
 };
 
@@ -17,9 +17,9 @@ export type Room = {
   sk?: string | null,
   avatarUrl?: string | null,
   title?: string | null,
-  latestMessage?: string | null,
-  latestMessageTime?: string | null,
   roomId: string,
+  latestMessage: string,
+  latestMessageTime: string,
 };
 
 export type MessageInput = {
@@ -28,6 +28,7 @@ export type MessageInput = {
   message?: string | null,
   roomId: string,
   senderEmail: string,
+  otherUserEmail: string,
 };
 
 export type Message = {
@@ -39,6 +40,7 @@ export type Message = {
   key: string,
   message?: string | null,
   senderEmail: string,
+  otherUserEmail: string,
   updatedAt?: string | null,
   roomId: string,
 };
@@ -54,9 +56,9 @@ export type CreateRoomMutation = {
     sk?: string | null,
     avatarUrl?: string | null,
     title?: string | null,
-    latestMessage?: string | null,
-    latestMessageTime?: string | null,
     roomId: string,
+    latestMessage: string,
+    latestMessageTime: string,
   } | null,
 };
 
@@ -74,6 +76,7 @@ export type CreateMessageMutation = {
     key: string,
     message?: string | null,
     senderEmail: string,
+    otherUserEmail: string,
     updatedAt?: string | null,
     roomId: string,
   } | null,
@@ -93,6 +96,7 @@ export type UpdateMessageMutation = {
     key: string,
     message?: string | null,
     senderEmail: string,
+    otherUserEmail: string,
     updatedAt?: string | null,
     roomId: string,
   } | null,
@@ -105,9 +109,9 @@ export type ListRoomsQuery = {
     sk?: string | null,
     avatarUrl?: string | null,
     title?: string | null,
-    latestMessage?: string | null,
-    latestMessageTime?: string | null,
     roomId: string,
+    latestMessage: string,
+    latestMessageTime: string,
   } | null > | null,
 };
 
@@ -125,9 +129,14 @@ export type ListMessagesQuery = {
     key: string,
     message?: string | null,
     senderEmail: string,
+    otherUserEmail: string,
     updatedAt?: string | null,
     roomId: string,
   } | null > | null,
+};
+
+export type OnCreateRoomSubscriptionVariables = {
+  otherUserEmail: string,
 };
 
 export type OnCreateRoomSubscription = {
@@ -137,9 +146,9 @@ export type OnCreateRoomSubscription = {
     sk?: string | null,
     avatarUrl?: string | null,
     title?: string | null,
-    latestMessage?: string | null,
-    latestMessageTime?: string | null,
     roomId: string,
+    latestMessage: string,
+    latestMessageTime: string,
   } | null,
 };
 
@@ -157,25 +166,7 @@ export type OnCreateMessageByRoomIdSubscription = {
     key: string,
     message?: string | null,
     senderEmail: string,
-    updatedAt?: string | null,
-    roomId: string,
-  } | null,
-};
-
-export type OnUpdateMessageByRoomIdSubscriptionVariables = {
-  roomId: string,
-};
-
-export type OnUpdateMessageByRoomIdSubscription = {
-  onUpdateMessageByRoomId?:  {
-    __typename: "Message",
-    pk?: string | null,
-    sk?: string | null,
-    type: string,
-    imageKey?: string | null,
-    key: string,
-    message?: string | null,
-    senderEmail: string,
+    otherUserEmail: string,
     updatedAt?: string | null,
     roomId: string,
   } | null,

@@ -1,7 +1,6 @@
 import { util } from "@aws-appsync/utils";
 
 export function request(ctx) {
-  const values = ctx.arguments;
   const user = ctx.identity.claims.sub;
   return getRoomItemsFromDdb(user);
 }

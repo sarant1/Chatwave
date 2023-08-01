@@ -6,16 +6,21 @@
   key: String!
   message: String
   senderEmail: String!
+  otherUserEmail: String!
   updatedAt: String
   roomId: String!
 }
 
 input MessageInput {
-  type: String! # image or text
-  imageKey: String # this will be returned from presigned url lamdba
-  message: String # populate this if it is not a photo
+  type: String!
+  # image or text
+  imageKey: String
+  # this will be returned from presigned url lamdba
+  message: String
+  # populate this if it is not a photo
   roomId: String!
   senderEmail: String!
+  otherUserEmail: String!
 }
 
 type Room {
@@ -23,9 +28,9 @@ type Room {
   sk: ID
   avatarUrl: String
   title: String
-  latestMessage: String
-  latestMessageTime: String
   roomId: String!
+  latestMessage: String!
+  latestMessageTime: String!
 }
 
 type RoomConnection {
@@ -35,10 +40,12 @@ type RoomConnection {
 
 input RoomInput {
   otherUserEmail: String!
+  # to
+  senderEmail: String!
+  # from
   message: String!
   type: String!
   avatarUrl: String
-  senderEmail: String!
   title: String!
 }
 
@@ -60,9 +67,8 @@ type Query {
 }
 
 type Subscription {
-  onCreateRoom: Room @aws_subscribe(mutations: ["createRoom"])
+  onCreateRoom(otherUserEmail: String!): Room
+    @aws_subscribe(mutations: ["createRoom"])
   onCreateMessageByRoomId(roomId: ID!): Message
     @aws_subscribe(mutations: ["createMessage"])
-  onUpdateMessageByRoomId(roomId: ID!): Message
-    @aws_subscribe(mutations: ["updateMessage"])
 }

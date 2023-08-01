@@ -48,6 +48,7 @@ function batchWriteItemToDynamoDb(values, otherUserUuid) {
           roomId: { S: uuid },
           updatedAt: { S: values.input.latestMessageTime },
           senderEmail: { S: values.input.senderEmail },
+          otherUserEmail: { S: values.input.otherUserEmail },
         },
       ],
     },

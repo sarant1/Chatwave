@@ -66,7 +66,20 @@ export class AppSyncNestedStack extends cdk.NestedStack {
         runtime: appsync.FunctionRuntime.JS_1_0_0,
       }
     );
-    const createRoomGetOtherUser = new appsync.AppsyncFunction(
+    const updateLatestMessageForUsers = new appsync.AppsyncFunction(
+      this,
+      "updateLatestMessageFunctionForUsers",
+      {
+        name: "updateLatestMessage",
+        api: this.api,
+        dataSource: this.sourceTable,
+        code: appsync.Code.fromAsset(
+          path.join(__dirname, "graphql/functions/updateLatestMessage.js")
+        ),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+      }
+    );
+    const getOtherUserFunction = new appsync.AppsyncFunction(
       this,
       "getOtherUserFunction",
       {
@@ -132,7 +145,11 @@ export class AppSyncNestedStack extends cdk.NestedStack {
           path.join(__dirname, "graphql/resolvers/createMessageResolver.js")
         ),
         runtime: appsync.FunctionRuntime.JS_1_0_0,
-        pipelineConfig: [createMessageCode],
+        pipelineConfig: [
+          getOtherUserFunction,
+          updateLatestMessageForUsers,
+          createMessageCode,
+        ],
       }
     );
     this.roomResolver = new appsync.Resolver(this, "RoomPipelineResolver", {
@@ -143,7 +160,7 @@ export class AppSyncNestedStack extends cdk.NestedStack {
         path.join(__dirname, "graphql/resolvers/createRoomForUserResolver.js")
       ),
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      pipelineConfig: [createRoomGetOtherUser, createRoomCode],
+      pipelineConfig: [getOtherUserFunction, createRoomCode],
     });
   }
 }

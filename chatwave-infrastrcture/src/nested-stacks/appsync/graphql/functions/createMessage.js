@@ -1,9 +1,10 @@
 import { util } from "@aws-appsync/utils";
 
 export function request(ctx) {
+  console.log("CTX FOR CREATE MESSAGE", ctx);
   const values = ctx.arguments;
   values.input.key = util.autoId();
-  values.input.updatedAt = util.time.nowISO8601();
+  values.input.updatedAt = ctx.stash.currentTime;
   return dynamodbPutRequest(values);
 }
 

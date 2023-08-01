@@ -9,9 +9,9 @@ export const listRooms = /* GraphQL */ `
       sk
       avatarUrl
       title
+      roomId
       latestMessage
       latestMessageTime
-      roomId
     }
   }
 `;
@@ -25,6 +25,7 @@ export const listMessages = /* GraphQL */ `
       key
       message
       senderEmail
+      otherUserEmail
       updatedAt
       roomId
     }

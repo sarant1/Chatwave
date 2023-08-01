@@ -3,35 +3,31 @@ import { Spinner, Flex } from "@chakra-ui/react";
 import React, { useEffect, useContext, useState } from "react";
 import { Container, IconButton } from "@chakra-ui/react";
 import CreateNewMessageBox from "./CreateNewMessage";
-import { OnCreateMessageByRoomIdSubscription } from "@/API";
 import MessageItem from "@/components/MessageItem";
 import { MessageItemProps } from "@/utils/types";
 import { AuthContext } from "@/contexts/auth.context";
 import { API, graphqlOperation } from "aws-amplify";
-import { GraphQLSubscription, GraphQLQuery } from "@aws-amplify/api";
+import { GraphQLQuery } from "@aws-amplify/api";
 import * as queries from "@/graphql/queries";
-import * as subscriptions from "@/graphql/subscriptions";
 import { ListMessagesQuery } from "@/API";
 import { BiArrowBack } from "react-icons/bi";
 
-const MessageBox: React.FC = () => {
+interface MessageBoxProps {
+  currentMessages: MessageItemProps[];
+  setCurrentMessages: React.Dispatch<React.SetStateAction<MessageItemProps[]>>;
+}
+
+const MessageBox: React.FC<MessageBoxProps> = ({
+  currentMessages,
+  setCurrentMessages,
+}) => {
   const { selectedRoom, setSelectedRoom } = useContext(AuthContext);
-  const [currentMessages, setCurrentMessages] = useState<MessageItemProps[]>(
-    []
-  );
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [sub, setSub] = useState<any>(null);
 
   useEffect(() => {
-    console.log("CURRENTMESSAGES!!: ", currentMessages);
-  });
-  useEffect(() => {
-    if (sub) {
-      sub.unsubscribe();
-    }
     fetchMessages();
-    subscribeToMessages();
   }, [selectedRoom]);
+
   // query messages
   const fetchMessages = async () => {
     setIsLoading(true);
@@ -45,30 +41,6 @@ const MessageBox: React.FC = () => {
       console.log(error);
     }
     setIsLoading(false);
-  };
-  // subscribe to messages for that room
-  const subscribeToMessages = () => {
-    if (!selectedRoom || !currentMessages) return;
-    setSub(
-      API.graphql<GraphQLSubscription<OnCreateMessageByRoomIdSubscription>>(
-        graphqlOperation(subscriptions.onCreateMessageByRoomId, {
-          roomId: selectedRoom.id,
-        })
-      ).subscribe({
-        // Update current messages here on new message
-        next: ({ value }) => {
-          console.log(value.data?.onCreateMessageByRoomId);
-          setCurrentMessages((prevMessages) => [
-            value.data?.onCreateMessageByRoomId as MessageItemProps,
-            ...prevMessages,
-          ]);
-        },
-        error: (error) => console.warn(error),
-      })
-    );
-    console.log("SUBSCRIPTION", sub);
-    // Stop receiving data updates from the subscription
-    return () => sub.unsubscribe();
   };
 
   return (

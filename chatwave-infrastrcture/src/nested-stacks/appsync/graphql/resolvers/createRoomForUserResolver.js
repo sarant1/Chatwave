@@ -29,5 +29,5 @@ export function request(ctx) {
  * @param ctx - Contextual information for your resolver invocation.
  */
 export function response(ctx) {
-  return ctx.prev.result.data.ChatWave[1];
+  return ctx.prev.result.data.ChatWave[0];
 }

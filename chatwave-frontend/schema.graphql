@@ -5,7 +5,7 @@
   imageKey: String
   key: String!
   message: String
-  senderEmail: String!
+  senderEmail: String
   otherUserEmail: String!
   updatedAt: String
   roomId: String!
@@ -31,6 +31,7 @@ type Room {
   roomId: String!
   message: String!
   updatedAt: String!
+  senderEmail: String!
 }
 
 type RoomConnection {

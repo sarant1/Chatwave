@@ -30,15 +30,17 @@ function batchWriteItemToDynamoDb(values, otherUserUuid) {
           avatarUrl: { S: values.input.avatarUrl },
           message: { S: values.input.message },
           updatedAt: { S: values.input.updatedAt },
+          senderEmail: { S: values.input.senderEmail },
         },
         {
           pk: { S: otherUserUuid },
           sk: { S: `ROOM#${uuid}` },
           roomId: { S: uuid },
-          title: { S: values.input.otherUserEmail },
+          title: { S: values.input.senderEmail },
           avatarUrl: { S: values.input.avatarUrl },
           message: { S: values.input.message },
           updatedAt: { S: values.input.updatedAt },
+          senderEmail: { S: values.input.senderEmail },
         },
         {
           pk: { S: "ROOM#" + uuid },

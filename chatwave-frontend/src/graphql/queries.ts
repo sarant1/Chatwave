@@ -12,6 +12,7 @@ export const listRooms = /* GraphQL */ `
       roomId
       message
       updatedAt
+      senderEmail
     }
   }
 `;

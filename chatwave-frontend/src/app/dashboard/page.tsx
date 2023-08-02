@@ -42,11 +42,17 @@ const RoomsPage: React.FC = () => {
     if (!user) return;
     API.graphql<GraphQLSubscription<OnCreateRoomSubscription>>(
       graphqlOperation(subscriptions.onCreateRoom, {
-        otherUserEmail: user.email,
+        title: user.email,
       })
     ).subscribe({
       next: ({ value }) => {
         console.log("NEW ROOM: ", value.data?.onCreateRoom);
+        let incomingRoom = value.data?.onCreateRoom as Room;
+        if (incomingRoom.senderEmail != user.email) {
+          incomingRoom.title = incomingRoom.senderEmail;
+          console.log("INCOMING ROOM: ", incomingRoom);
+        }
+        setRooms((prev) => [incomingRoom, ...prev]);
       },
       error: (error) => console.warn(error),
     });
@@ -58,7 +64,6 @@ const RoomsPage: React.FC = () => {
       const rooms = await API.graphql<GraphQLQuery<ListRoomsQuery>>({
         query: queries.listRooms,
       });
-      console.log(rooms);
       setRooms(rooms.data?.listRooms as Room[]);
     } catch (err) {
       console.log(err);
@@ -96,7 +101,7 @@ const RoomsPage: React.FC = () => {
 
   return (
     <Flex h="92vh">
-      <RoomsList rooms={rooms} newMessage={newMessage} />
+      <RoomsList rooms={rooms} setRooms={setRooms} newMessage={newMessage} />
       <MessageBox
         currentMessages={currentMessages}
         setCurrentMessages={setCurrentMessages}

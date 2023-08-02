@@ -12,10 +12,15 @@ import { MessageItemProps } from "@/utils/types";
 
 interface RoomsListProps {
   rooms: Room[];
+  setRooms: React.Dispatch<React.SetStateAction<Room[]>>;
   newMessage: MessageItemProps | null | undefined;
 }
 
-const RoomsList: React.FC<RoomsListProps> = ({ rooms, newMessage }) => {
+const RoomsList: React.FC<RoomsListProps> = ({
+  rooms,
+  setRooms,
+  newMessage,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user, selectedRoom } = useContext(AuthContext);
   const [refresh, setRefresh] = React.useState(false);
@@ -56,7 +61,12 @@ const RoomsList: React.FC<RoomsListProps> = ({ rooms, newMessage }) => {
           onClick={onOpen}
         />
       </Flex>
-      <CreateMessageModal onClose={onClose} isOpen={isOpen} user={user} />
+      <CreateMessageModal
+        onClose={onClose}
+        isOpen={isOpen}
+        user={user}
+        setRooms={setRooms}
+      />
       {rooms
         .sort((a, b) => (a.updatedAt > b.updatedAt ? -1 : 1))
         .map((room) => (

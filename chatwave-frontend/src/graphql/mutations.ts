@@ -12,6 +12,7 @@ export const createRoom = /* GraphQL */ `
       roomId
       message
       updatedAt
+      senderEmail
     }
   }
 `;

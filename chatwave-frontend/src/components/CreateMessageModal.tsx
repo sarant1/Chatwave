@@ -18,16 +18,19 @@ import { API, graphqlOperation } from "aws-amplify";
 import { GraphQLQuery } from "@aws-amplify/api";
 import * as mutations from "@/graphql/mutations";
 import { CreateRoomMutation } from "@/API";
+import { Room } from "@/API";
 interface CreateMessageModalProps {
   isOpen: boolean;
   onClose: () => void;
   user: User | null;
+  setRooms: React.Dispatch<React.SetStateAction<Room[]>>;
 }
 
 function CreateMessageModal({
   isOpen,
   onClose,
   user,
+  setRooms,
 }: CreateMessageModalProps) {
   const [email, setEmail] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -48,6 +51,8 @@ function CreateMessageModal({
           input: inputVals,
         },
       });
+      console.log("NEWEST ROOM: ", newRoom);
+      setRooms((prevRooms) => [newRoom.data?.createRoom as Room, ...prevRooms]);
     } catch (error: any) {
       console.log(error);
     }

@@ -57,18 +57,20 @@ const RoomsList: React.FC<RoomsListProps> = ({ rooms, newMessage }) => {
         />
       </Flex>
       <CreateMessageModal onClose={onClose} isOpen={isOpen} user={user} />
-      {rooms.map((room) => (
-        <RoomItem
-          key={room.sk}
-          title={room.title}
-          roomId={room.roomId}
-          avatarUrl={room.avatarUrl}
-          latestMessage={room.latestMessage}
-          latestMessageTime={room.latestMessageTime}
-          sk={room.sk}
-          __typename="Room"
-        />
-      ))}
+      {rooms
+        .sort((a, b) => (a.latestMessageTime > b.latestMessageTime ? -1 : 1))
+        .map((room) => (
+          <RoomItem
+            key={room.sk}
+            title={room.title}
+            roomId={room.roomId}
+            avatarUrl={room.avatarUrl}
+            latestMessage={room.latestMessage}
+            latestMessageTime={room.latestMessageTime}
+            sk={room.sk}
+            __typename="Room"
+          />
+        ))}
     </Container>
   );
 };

@@ -1,15 +1,14 @@
 import { Avatar, Box, Container, Flex, Text } from "@chakra-ui/react";
-import { RoomI } from "@/contexts/auth.context";
 import React from "react";
 import { Room } from "@/API";
+import { AuthContext } from "@/contexts/auth.context";
+import { useContext } from "react";
 
-interface RoomItemProps extends Room {
-  setSelectedRoom: React.Dispatch<
-    React.SetStateAction<RoomI | null | undefined>
-  >;
-}
+interface RoomItemProps extends Room {}
 
 const RoomItem: React.FC<RoomItemProps> = (props) => {
+  const { setSelectedRoom } = useContext(AuthContext);
+
   const localItemTime = () => {
     const date = new Date(props.latestMessageTime as string);
     const options: Intl.DateTimeFormatOptions = {
@@ -29,7 +28,7 @@ const RoomItem: React.FC<RoomItemProps> = (props) => {
       mb={2}
       _hover={{ cursor: "pointer", bg: "gray.300" }}
       onClick={() => {
-        props.setSelectedRoom({ id: props.roomId, title: props.title });
+        setSelectedRoom({ id: props.roomId, title: props.title });
         console.log(props.roomId);
       }}
     >

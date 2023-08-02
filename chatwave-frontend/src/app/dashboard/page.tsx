@@ -13,16 +13,26 @@ import { OnCreateMessageByRoomIdSubscription } from "@/API";
 import * as subscriptions from "@/graphql/subscriptions";
 import { GraphQLSubscription, GraphQLQuery } from "@aws-amplify/api";
 import { graphqlOperation } from "aws-amplify";
+import { subscribe } from "diagnostics_channel";
 const RoomsPage: React.FC = () => {
   const { user, selectedRoom } = useContext(AuthContext);
   const [rooms, setRooms] = useState<Room[]>([]);
-  const [sub, setSub] = useState<any>(null);
   const [currentMessages, setCurrentMessages] = useState<MessageItemProps[]>(
     []
   );
+  const [sub, setSub] = useState<any>();
+  const [newMessage, setNewMessage] = useState<MessageItemProps>();
+
   useEffect(() => {
     fetchRooms();
   }, [user]);
+
+  useEffect(() => {
+    if (sub) {
+      sub.unsubscribe();
+    }
+    subscribeToRooms();
+  }, [rooms, selectedRoom]);
 
   const fetchRooms = async () => {
     if (!user) return;
@@ -37,34 +47,38 @@ const RoomsPage: React.FC = () => {
     }
   };
 
-  // subscribe to messages for that room
-  const subscribeToMessages = () => {
-    if (!selectedRoom || !currentMessages) return;
+  // this will subscribe to all rooms in the list and all messages
+  const subscribeToRooms = () => {
+    if (!user) return;
     setSub(
-      API.graphql<GraphQLSubscription<OnCreateMessageByRoomIdSubscription>>(
-        graphqlOperation(subscriptions.onCreateMessageByRoomId, {
-          roomId: selectedRoom.id,
-        })
-      ).subscribe({
-        // Update current messages here on new message
-        next: ({ value }) => {
-          console.log(value.data?.onCreateMessageByRoomId);
-          setCurrentMessages((prevMessages) => [
-            value.data?.onCreateMessageByRoomId as MessageItemProps,
-            ...prevMessages,
-          ]);
-        },
-        error: (error) => console.warn(error),
+      rooms.forEach((room) => {
+        API.graphql<GraphQLSubscription<OnCreateMessageByRoomIdSubscription>>(
+          graphqlOperation(subscriptions.onCreateMessageByRoomId, {
+            roomId: room.roomId,
+          })
+        ).subscribe({
+          next: ({ value }) => {
+            const message = value.data?.onCreateMessageByRoomId;
+            if (message?.roomId === selectedRoom?.id) {
+              setCurrentMessages((prev) => [
+                message as MessageItemProps,
+                ...prev,
+              ]);
+            } else {
+              console.log("NEW MESSAGE IN ANOTHER ROOM");
+              setNewMessage(message as MessageItemProps);
+            }
+          },
+          error: (error) => console.warn(error),
+        });
       })
     );
-    console.log("SUBSCRIPTION", sub);
-    // Stop receiving data updates from the subscription
-    return () => sub.unsubscribe();
+    console.log("SUBSCRIBED :)");
   };
 
   return (
     <Flex h="92vh">
-      <RoomsList rooms={rooms} />
+      <RoomsList rooms={rooms} newMessage={newMessage} />
       <MessageBox
         currentMessages={currentMessages}
         setCurrentMessages={setCurrentMessages}

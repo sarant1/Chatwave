@@ -30,8 +30,8 @@ const MessageBox: React.FC<MessageBoxProps> = ({
 
   // query messages
   const fetchMessages = async () => {
+    if (!selectedRoom) return;
     setIsLoading(true);
-    if (!selectedRoom || currentMessages.length > 0) return;
     try {
       const messages = await API.graphql<GraphQLQuery<ListMessagesQuery>>(
         graphqlOperation(queries.listMessages, { roomId: selectedRoom.id })

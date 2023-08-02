@@ -1,21 +1,38 @@
 "use client";
 
 import RoomItem from "@/components/RoomItem";
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Text, Flex, Icon, useDisclosure } from "@chakra-ui/react";
 import { BsPencilSquare } from "react-icons/bs";
 import CreateMessageModal from "@/components/CreateMessageModal";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/auth.context";
 import { Room } from "@/API";
+import { MessageItemProps } from "@/utils/types";
 
 interface RoomsListProps {
   rooms: Room[];
+  newMessage: MessageItemProps | null | undefined;
 }
 
-const RoomsList: React.FC<RoomsListProps> = ({ rooms }) => {
+const RoomsList: React.FC<RoomsListProps> = ({ rooms, newMessage }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user, selectedRoom, setSelectedRoom } = useContext(AuthContext);
+  const { user, selectedRoom } = useContext(AuthContext);
+  const [refresh, setRefresh] = React.useState(false);
+
+  useEffect(() => {
+    console.log("neww message: ", newMessage?.message);
+    if (newMessage) {
+      let index = rooms.findIndex((room) => room.roomId === newMessage?.roomId);
+      if (index !== -1) {
+        rooms[index].latestMessage = newMessage?.message || "new message";
+        rooms[index].latestMessageTime = newMessage?.updatedAt;
+      } else {
+        console.log("INDEX not found ");
+      }
+      setRefresh(!refresh);
+    }
+  }, [newMessage]);
 
   return (
     <Container
@@ -48,7 +65,6 @@ const RoomsList: React.FC<RoomsListProps> = ({ rooms }) => {
           avatarUrl={room.avatarUrl}
           latestMessage={room.latestMessage}
           latestMessageTime={room.latestMessageTime}
-          setSelectedRoom={setSelectedRoom}
           sk={room.sk}
           __typename="Room"
         />

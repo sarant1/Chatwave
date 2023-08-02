@@ -9,11 +9,14 @@ import { API } from "aws-amplify";
 import * as queries from "@/graphql/queries";
 import { ListRoomsQuery } from "@/API";
 import { MessageItemProps } from "@/utils/types";
-import { OnCreateMessageByRoomIdSubscription } from "@/API";
+import {
+  OnCreateMessageByRoomIdSubscription,
+  OnCreateRoomSubscription,
+} from "@/API";
 import * as subscriptions from "@/graphql/subscriptions";
 import { GraphQLSubscription, GraphQLQuery } from "@aws-amplify/api";
 import { graphqlOperation } from "aws-amplify";
-import { subscribe } from "diagnostics_channel";
+
 const RoomsPage: React.FC = () => {
   const { user, selectedRoom } = useContext(AuthContext);
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -25,6 +28,7 @@ const RoomsPage: React.FC = () => {
 
   useEffect(() => {
     fetchRooms();
+    subToOnCreateRoom();
   }, [user]);
 
   useEffect(() => {
@@ -33,6 +37,20 @@ const RoomsPage: React.FC = () => {
     }
     subscribeToRooms();
   }, [rooms, selectedRoom]);
+
+  const subToOnCreateRoom = () => {
+    if (!user) return;
+    API.graphql<GraphQLSubscription<OnCreateRoomSubscription>>(
+      graphqlOperation(subscriptions.onCreateRoom, {
+        otherUserEmail: user.email,
+      })
+    ).subscribe({
+      next: ({ value }) => {
+        console.log("NEW ROOM: ", value.data?.onCreateRoom);
+      },
+      error: (error) => console.warn(error),
+    });
+  };
 
   const fetchRooms = async () => {
     if (!user) return;

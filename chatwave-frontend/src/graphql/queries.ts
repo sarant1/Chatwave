@@ -10,8 +10,8 @@ export const listRooms = /* GraphQL */ `
       avatarUrl
       title
       roomId
-      latestMessage
-      latestMessageTime
+      message
+      updatedAt
     }
   }
 `;

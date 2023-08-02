@@ -25,8 +25,8 @@ const RoomsList: React.FC<RoomsListProps> = ({ rooms, newMessage }) => {
     if (newMessage) {
       let index = rooms.findIndex((room) => room.roomId === newMessage?.roomId);
       if (index !== -1) {
-        rooms[index].latestMessage = newMessage?.message || "new message";
-        rooms[index].latestMessageTime = newMessage?.updatedAt;
+        rooms[index].message = newMessage?.message || "new message";
+        rooms[index].updatedAt = newMessage?.updatedAt;
       } else {
         console.log("INDEX not found ");
       }
@@ -58,15 +58,15 @@ const RoomsList: React.FC<RoomsListProps> = ({ rooms, newMessage }) => {
       </Flex>
       <CreateMessageModal onClose={onClose} isOpen={isOpen} user={user} />
       {rooms
-        .sort((a, b) => (a.latestMessageTime > b.latestMessageTime ? -1 : 1))
+        .sort((a, b) => (a.updatedAt > b.updatedAt ? -1 : 1))
         .map((room) => (
           <RoomItem
             key={room.sk}
             title={room.title}
             roomId={room.roomId}
             avatarUrl={room.avatarUrl}
-            latestMessage={room.latestMessage}
-            latestMessageTime={room.latestMessageTime}
+            message={room.message}
+            updatedAt={room.updatedAt}
             sk={room.sk}
             __typename="Room"
           />

@@ -18,8 +18,8 @@ export type Room = {
   avatarUrl?: string | null,
   title?: string | null,
   roomId: string,
-  latestMessage: string,
-  latestMessageTime: string,
+  message: string,
+  updatedAt: string,
 };
 
 export type MessageInput = {
@@ -57,8 +57,8 @@ export type CreateRoomMutation = {
     avatarUrl?: string | null,
     title?: string | null,
     roomId: string,
-    latestMessage: string,
-    latestMessageTime: string,
+    message: string,
+    updatedAt: string,
   } | null,
 };
 
@@ -110,8 +110,8 @@ export type ListRoomsQuery = {
     avatarUrl?: string | null,
     title?: string | null,
     roomId: string,
-    latestMessage: string,
-    latestMessageTime: string,
+    message: string,
+    updatedAt: string,
   } | null > | null,
 };
 
@@ -136,7 +136,7 @@ export type ListMessagesQuery = {
 };
 
 export type OnCreateRoomSubscriptionVariables = {
-  otherUserEmail: string,
+  title: string,
 };
 
 export type OnCreateRoomSubscription = {
@@ -147,8 +147,8 @@ export type OnCreateRoomSubscription = {
     avatarUrl?: string | null,
     title?: string | null,
     roomId: string,
-    latestMessage: string,
-    latestMessageTime: string,
+    message: string,
+    updatedAt: string,
   } | null,
 };
 

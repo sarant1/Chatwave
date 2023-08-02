@@ -10,7 +10,7 @@ const RoomItem: React.FC<RoomItemProps> = (props) => {
   const { setSelectedRoom } = useContext(AuthContext);
 
   const localItemTime = () => {
-    const date = new Date(props.latestMessageTime as string);
+    const date = new Date(props.updatedAt as string);
     const options: Intl.DateTimeFormatOptions = {
       hour: "numeric",
       minute: "numeric",
@@ -53,7 +53,7 @@ const RoomItem: React.FC<RoomItemProps> = (props) => {
             </Text>
             <Text color="gray.600">{localItemTime()}</Text>
           </Flex>
-          <Text>{props.latestMessage}</Text>
+          <Text>{props.message}</Text>
         </Flex>
       </Flex>
     </Box>

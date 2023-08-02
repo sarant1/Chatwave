@@ -10,8 +10,8 @@ export const createRoom = /* GraphQL */ `
       avatarUrl
       title
       roomId
-      latestMessage
-      latestMessageTime
+      message
+      updatedAt
     }
   }
 `;

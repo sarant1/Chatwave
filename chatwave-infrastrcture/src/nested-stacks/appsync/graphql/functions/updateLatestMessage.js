@@ -36,7 +36,7 @@ function dynamoDbUpdateLatestMessage(
           sk: { S: `ROOM#${values.input.roomId}` },
         },
         update: {
-          expression: "SET latestMessage = :message, latestMessageTime = :time",
+          expression: "SET message = :message, updatedAt = :time",
           expressionValues: util.dynamodb.toMapValues({
             ":message": values.input.message,
             ":time": currentTime,
@@ -51,7 +51,7 @@ function dynamoDbUpdateLatestMessage(
           sk: { S: `ROOM#${values.input.roomId}` },
         },
         update: {
-          expression: "SET latestMessage = :message, latestMessageTime = :time",
+          expression: "SET message = :message, updatedAt = :time",
           expressionValues: util.dynamodb.toMapValues({
             ":message": values.input.message,
             ":time": currentTime,

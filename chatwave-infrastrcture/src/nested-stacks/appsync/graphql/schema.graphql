@@ -29,8 +29,8 @@ type Room {
   avatarUrl: String
   title: String
   roomId: String!
-  latestMessage: String!
-  latestMessageTime: String!
+  message: String!
+  updatedAt: String!
 }
 
 type RoomConnection {
@@ -67,8 +67,7 @@ type Query {
 }
 
 type Subscription {
-  onCreateRoom(otherUserEmail: String!): Room
-    @aws_subscribe(mutations: ["createRoom"])
+  onCreateRoom(title: String!): Room @aws_subscribe(mutations: ["createRoom"])
   onCreateMessageByRoomId(roomId: ID!): Message
     @aws_subscribe(mutations: ["createMessage"])
 }

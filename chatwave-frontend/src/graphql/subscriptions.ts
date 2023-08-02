@@ -3,15 +3,15 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateRoom = /* GraphQL */ `
-  subscription OnCreateRoom($otherUserEmail: String!) {
-    onCreateRoom(otherUserEmail: $otherUserEmail) {
+  subscription OnCreateRoom($title: String!) {
+    onCreateRoom(title: $title) {
       pk
       sk
       avatarUrl
       title
       roomId
-      latestMessage
-      latestMessageTime
+      message
+      updatedAt
     }
   }
 `;

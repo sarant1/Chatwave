@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthContext } from "@/contexts/auth.context";
+import { AuthContext, RoomI } from "@/contexts/auth.context";
 import { useState } from "react";
 import { User } from "@/utils/types";
 
@@ -10,14 +10,13 @@ export type AuthProviderProps = {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
-  const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<RoomI | null>(null);
 
-  const value = {
-    user,
-    setUser,
-    selectedRoom,
-    setSelectedRoom,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{ user, setUser, selectedRoom, setSelectedRoom }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };

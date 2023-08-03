@@ -10,9 +10,7 @@ export interface IAuthContext {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   selectedRoom: RoomI | null;
-  setSelectedRoom: React.Dispatch<
-    React.SetStateAction<RoomI | null | undefined>
-  >;
+  setSelectedRoom: React.Dispatch<React.SetStateAction<RoomI | null>>;
 }
 
 const defaultAuthContext: IAuthContext = {

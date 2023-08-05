@@ -1,5 +1,6 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+
+import React, { useContext, useEffect, useRef, useState } from "react";
 import RoomsList from "@/components/RoomsList";
 import MessageBox from "@/components/MessageBox";
 import { Flex, Box } from "@chakra-ui/react";
@@ -23,7 +24,6 @@ const RoomsPage: React.FC = () => {
   const [currentMessages, setCurrentMessages] = useState<MessageItemProps[]>(
     []
   );
-  const [sub, setSub] = useState<any>();
   const [newMessage, setNewMessage] = useState<MessageItemProps>();
 
   useEffect(() => {
@@ -32,10 +32,30 @@ const RoomsPage: React.FC = () => {
   }, [user]);
 
   useEffect(() => {
-    if (sub) {
+    if (!user) return;
+    const sub = API.graphql<
+      GraphQLSubscription<OnCreateMessageByRoomIdSubscription>
+    >(
+      graphqlOperation(subscriptions.onCreateMessageByRoomId, {
+        roomId: selectedRoom.id,
+      })
+    ).subscribe({
+      next: ({ value }) => {
+        const message = value.data?.onCreateMessageByRoomId;
+        console.log("THE INCOMING MESSAGE IS: ", message);
+        if (!selectedRoom.id || !message) return;
+        if (message.roomId === selectedRoom?.id) {
+          setCurrentMessages((prev) => [message as MessageItemProps, ...prev]);
+        } else {
+          setNewMessage(message as MessageItemProps);
+        }
+      },
+      error: (error) => console.warn(error),
+    });
+
+    return () => {
       sub.unsubscribe();
-    }
-    subscribeToRooms();
+    };
   }, [rooms, selectedRoom]);
 
   const subToOnCreateRoom = () => {
@@ -59,6 +79,7 @@ const RoomsPage: React.FC = () => {
   };
 
   const fetchRooms = async () => {
+    console.log("fetching rooms...");
     if (!user) return;
     try {
       const rooms = await API.graphql<GraphQLQuery<ListRoomsQuery>>({
@@ -68,35 +89,6 @@ const RoomsPage: React.FC = () => {
     } catch (err) {
       console.log(err);
     }
-  };
-
-  // this will subscribe to all rooms in the list and all messages
-  const subscribeToRooms = () => {
-    if (!user) return;
-    setSub(
-      rooms.forEach((room) => {
-        API.graphql<GraphQLSubscription<OnCreateMessageByRoomIdSubscription>>(
-          graphqlOperation(subscriptions.onCreateMessageByRoomId, {
-            roomId: room.roomId,
-          })
-        ).subscribe({
-          next: ({ value }) => {
-            const message = value.data?.onCreateMessageByRoomId;
-            if (message?.roomId === selectedRoom?.id) {
-              setCurrentMessages((prev) => [
-                message as MessageItemProps,
-                ...prev,
-              ]);
-            } else {
-              console.log("NEW MESSAGE IN ANOTHER ROOM");
-              setNewMessage(message as MessageItemProps);
-            }
-          },
-          error: (error) => console.warn(error),
-        });
-      })
-    );
-    console.log("SUBSCRIBED :)");
   };
 
   return (

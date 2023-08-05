@@ -68,7 +68,7 @@ export class AppSyncNestedStack extends cdk.NestedStack {
     );
     const updateLatestMessageForUsers = new appsync.AppsyncFunction(
       this,
-      "updateLatestMessageFunctionForUsers",
+      "updateLatestMessageFunction",
       {
         name: "updateLatestMessage",
         api: this.api,

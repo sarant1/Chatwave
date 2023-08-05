@@ -7,7 +7,7 @@ import { useContext } from "react";
 interface RoomItemProps extends Room {}
 
 const RoomItem: React.FC<RoomItemProps> = (props) => {
-  const { setSelectedRoom } = useContext(AuthContext);
+  const { setSelectedRoom, selectedRoom } = useContext(AuthContext);
 
   const localItemTime = () => {
     const date = new Date(props.updatedAt as string);
@@ -29,7 +29,6 @@ const RoomItem: React.FC<RoomItemProps> = (props) => {
       _hover={{ cursor: "pointer", bg: "gray.300" }}
       onClick={() => {
         setSelectedRoom({ id: props.roomId, title: props.title });
-        console.log(props.roomId);
       }}
     >
       <Flex>

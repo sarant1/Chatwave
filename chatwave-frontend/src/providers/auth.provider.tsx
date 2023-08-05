@@ -10,7 +10,10 @@ export type AuthProviderProps = {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
-  const [selectedRoom, setSelectedRoom] = useState<RoomI | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<RoomI>({
+    id: null,
+    title: null,
+  });
 
   return (
     <AuthContext.Provider

@@ -42,12 +42,11 @@ export default function Signin() {
 
   useAuth();
 
+  console.log("REGION: ", process.env.NEXT_PUBLIC_AWS_REGION);
   const guestCredentails: LoginProps = {
     email: "guest@chatwave.com",
-    password: "123Testing!",
+    password: "Testing123!",
   };
-
-  //TODO FIX ERROR HANDLING
 
   const handleSubmit = async () => {
     const signUpData: LoginProps = {

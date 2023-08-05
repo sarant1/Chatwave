@@ -35,7 +35,7 @@ const CreateNewMessageBox: React.FC = () => {
   };
 
   const submitPhotoToAppSync = async () => {
-    if (!selectedRoom || !user) return;
+    if (!selectedRoom.id || !user) return;
     const inputVals = {
       type: "image",
       roomId: selectedRoom.id,
@@ -57,7 +57,7 @@ const CreateNewMessageBox: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    if (!selectedRoom || !user) return;
+    if (!selectedRoom.id || !user) return;
     setIsLoading(true);
     if (file) {
       await submitPhotoToS3();

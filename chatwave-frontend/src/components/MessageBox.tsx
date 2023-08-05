@@ -25,12 +25,13 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    if (!selectedRoom.id) return;
     fetchMessages();
   }, [selectedRoom]);
 
   // query messages
   const fetchMessages = async () => {
-    if (!selectedRoom) return;
+    if (!selectedRoom.id) return;
     setIsLoading(true);
     try {
       const messages = await API.graphql<GraphQLQuery<ListMessagesQuery>>(
@@ -45,7 +46,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
 
   return (
     <Flex
-      display={{ base: selectedRoom ? "flex" : "none", xl: "flex" }}
+      display={{ base: selectedRoom.id ? "flex" : "none", xl: "flex" }}
       flexDir="column"
       w="full"
       h="full"
@@ -54,13 +55,14 @@ const MessageBox: React.FC<MessageBoxProps> = ({
     >
       <IconButton
         aria-label="back"
-        display={selectedRoom ? "flex" : "none"}
+        display={selectedRoom.id ? "flex" : "none"}
         icon={<BiArrowBack />}
         mx={4}
         my={1}
         onClick={() => {
-          setSelectedRoom(null);
+          setSelectedRoom({ id: null, title: null });
           setCurrentMessages([]);
+          console.log("selected room to null: ", selectedRoom);
         }}
       >
         Test
@@ -71,23 +73,23 @@ const MessageBox: React.FC<MessageBoxProps> = ({
         borderColor={{ base: "", xl: "gray.400" }}
         mx={4}
         mb={4}
-        display={selectedRoom ? "flex" : "none"}
+        display={selectedRoom.id ? "flex" : "none"}
         flexDirection="column-reverse"
         overflowY="scroll"
         lineHeight="1.5"
         flex="1"
-        justifyContent={isLoading && selectedRoom ? "center" : ""}
+        justifyContent={isLoading && selectedRoom.id ? "center" : ""}
         paddingInlineStart={{ base: "2px", xl: 4 }}
         paddingInlineEnd={{ base: "2px", xl: 3 }}
       >
-        {isLoading && selectedRoom ? (
+        {isLoading && selectedRoom.id ? (
           <Flex justifyContent="center" alignItems="center">
             <Spinner size="xl" />
           </Flex>
         ) : (
           <>
             <CreateNewMessageBox />
-            {selectedRoom &&
+            {selectedRoom.id &&
               currentMessages.map((message) => (
                 <MessageItem
                   type={message.type}

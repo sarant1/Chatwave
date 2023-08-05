@@ -26,7 +26,7 @@ const RoomsList: React.FC<RoomsListProps> = ({
   const [refresh, setRefresh] = React.useState(false);
 
   useEffect(() => {
-    console.log("neww message: ", newMessage?.message);
+    console.log("new message: ", newMessage?.message);
     if (newMessage) {
       let index = rooms.findIndex((room) => room.roomId === newMessage?.roomId);
       if (index !== -1) {
@@ -42,7 +42,7 @@ const RoomsList: React.FC<RoomsListProps> = ({
   return (
     <Container
       maxW={{ base: "100vw", md: "lg" }}
-      display={{ base: selectedRoom ? "none" : "", xl: "block" }}
+      display={{ base: selectedRoom.id ? "block" : "", xl: "block" }}
       paddingInlineStart={0}
       paddingInlineEnd={0}
       padding={2}
@@ -77,6 +77,7 @@ const RoomsList: React.FC<RoomsListProps> = ({
             avatarUrl={room.avatarUrl}
             message={room.message}
             updatedAt={room.updatedAt}
+            senderEmail={room.senderEmail}
             sk={room.sk}
             __typename="Room"
           />

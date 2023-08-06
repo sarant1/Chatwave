@@ -4,6 +4,7 @@ import { CognitoNestedStack } from "./nested-stacks/auth/cognito";
 import { DynamoDBTableStack } from "./nested-stacks/dynamodb-table/dynamodb";
 import { AppSyncNestedStack } from "./nested-stacks/appsync/appsync";
 import { ServerlessFunctionsNestedStack } from "./nested-stacks/serverless-functions/serverless-functions";
+import { S3StaticWebsiteStack } from "./nested-stacks/s3-static-website/s3-static-website";
 import { IUserPool } from "aws-cdk-lib/aws-cognito";
 interface RootStackProps extends cdk.StackProps {}
 
@@ -24,6 +25,7 @@ export class RootStack extends cdk.Stack {
       cognitoUserPool.userPool
     );
     this.createServerlessStack("ServerlessFunctions");
+    this.createStaticWebsite(`${this.projectName}-Static-Bucket`);
   }
 
   createDynamoDbStack(name: string) {
@@ -49,5 +51,9 @@ export class RootStack extends cdk.Stack {
     return new ServerlessFunctionsNestedStack(this, name, {
       projectName: this.projectName,
     });
+  }
+
+  createStaticWebsite(name: string) {
+    return new S3StaticWebsiteStack(this, name, {});
   }
 }

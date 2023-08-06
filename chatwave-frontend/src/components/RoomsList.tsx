@@ -42,7 +42,7 @@ const RoomsList: React.FC<RoomsListProps> = ({
   return (
     <Container
       maxW={{ base: "100vw", md: "lg" }}
-      display={{ base: selectedRoom.id ? "block" : "", xl: "block" }}
+      display={{ base: selectedRoom.id ? "none" : "block", xl: "block" }}
       paddingInlineStart={0}
       paddingInlineEnd={0}
       padding={2}

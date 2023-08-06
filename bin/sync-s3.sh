@@ -12,8 +12,11 @@ set -e
 export CLOUDFRONT_DISTRIBUTION_ID='E3CU8F9ZYS1D2'
 export S3_WEBSITE_URL='sudosam.com'
 
+echo "argument: $0"
+echo "readlink: $(readlink -f $0)"
+
 # Get path to build file
-ROOTPATH=$(dirname $(dirname $(readlink -f $0)))
+ROOTPATH=$(dirname $(dirname $(readlink -f "$0")))
 OUTPATH=$ROOTPATH/chatwave-frontend/out
 
 # Sync out directory to s3 static website bucket

@@ -8,7 +8,7 @@ NC='\033[0m' # No Color
 set -e
 
 # Get path to root frontend
-ROOTPATH=$(dirname $(dirname $(readlink -f $0)))
+ROOTPATH=$(dirname $(dirname $(readlink -f "$0")))
 FRONTEND_PATH=$ROOTPATH/chatwave-frontend
 
 # Build frontend

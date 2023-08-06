@@ -42,11 +42,10 @@ interface LinkItemProps {
   icon: IconType;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: "Home", icon: FiHome },
-  { name: "Trending", icon: FiTrendingUp },
-  { name: "Explore", icon: FiCompass },
-  { name: "Favourites", icon: FiStar },
-  { name: "Settings", icon: FiSettings },
+  { name: "These", icon: FiHome },
+  { name: "Buttons", icon: FiTrendingUp },
+  { name: "Do", icon: FiCompass },
+  { name: "Nothing", icon: FiStar },
 ];
 
 import { useAuth } from "@/hooks/useAuth";

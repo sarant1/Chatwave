@@ -86,4 +86,7 @@ In order to recieve messages in rooms your not currently using, the user would h
 
 ## TODO
 
+- Set up Avatar Urls
+- Subscribe to all rooms at once
+- Notifications
 - Delete room(conversation) possibly delete messages

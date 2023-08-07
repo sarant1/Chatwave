@@ -5,7 +5,7 @@ import boto3
 client = boto3.client('cognito-idp')
 
 response = client.list_users(
-    UserPoolId='us-east-1_uNgHl3Sio',
+    UserPoolId='us-east-1_9Zehkm7F5',
     AttributesToGet=[
         'email',
     ],

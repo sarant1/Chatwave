@@ -9,7 +9,7 @@ NC='\033[0m' # No Color
 # Exit on error
 set -e
 
-export CLOUDFRONT_DISTRIBUTION_ID='E3CU8F9ZYS1D2'
+export CLOUDFRONT_DISTRIBUTION_ID='E5IR8PTOYP2C'
 export S3_WEBSITE_URL='sudosam.com'
 
 echo "argument: $0"

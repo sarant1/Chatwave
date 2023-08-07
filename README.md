@@ -1,5 +1,7 @@
 # AWS Serverless Chat Application
 
+![Infrastructure](./images/chatwave-infrastructure.png)
+
 ## Overview
 
 This is a fully serverless real-time chat application that could scale with minimal effort.
@@ -54,7 +56,7 @@ export S3_WEBSITE_URL='STATIC_WEBSITE_BUCKET_NAME'
 
 6. Create a guest user account with scripts ./bin/create-guest-cognito-user.sh && make sure to update this user in dynamodb with ./bin/cognito-update-dynamodb.py script
 
-7. Now you can use the cloudfront URL to use the app. NOTE: you can use a custom domain by pointing the domain to cloudfront url as an alias.
+7. Now you can use the cloudfront URL to use the app. NOTE: you can use a custom domain by pointing the domain to cloudfront url as an alias. You will have to update the cloudfront distribution and route53
 
 ## Useful commands
 

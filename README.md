@@ -60,6 +60,12 @@ export S3_WEBSITE_URL='STATIC_WEBSITE_BUCKET_NAME'
 
 ## Useful commands
 
+To destroy infrastructure.
+
+```bash
+npx projen destroy
+```
+
 To configure your graphql schema in the frontend, use this command with your appsync apiId.
 
 ```bash

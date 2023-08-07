@@ -10,12 +10,14 @@ interface RootStackProps extends cdk.StackProps {}
 
 export class RootStack extends cdk.Stack {
   public projectName: string;
+  public bucketName: string;
   public dynamoDbTableName: string;
 
   constructor(scope: Construct, id: string, props: RootStackProps) {
     super(scope, id, props);
     this.projectName = "ChatWave";
     this.dynamoDbTableName = `${this.projectName}`;
+    this.bucketName = "sudosam.com";
 
     const dynamodDbTable = this.createDynamoDbStack("DynamoDbStack");
     const cognitoUserPool = this.createCognitoStack("Cognito");
@@ -54,6 +56,8 @@ export class RootStack extends cdk.Stack {
   }
 
   createStaticWebsite(name: string) {
-    return new S3StaticWebsiteStack(this, name, {});
+    return new S3StaticWebsiteStack(this, name, {
+      bucketName: this.bucketName,
+    });
   }
 }

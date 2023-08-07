@@ -4,7 +4,9 @@ import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
 import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
 import { Construct } from "constructs";
 import { getAppRootDir } from "../../utils/get-app-root-dir";
-interface S3StaticWebsiteProps extends cdk.NestedStackProps {}
+interface S3StaticWebsiteProps extends cdk.NestedStackProps {
+  bucketName: string;
+}
 
 export class S3StaticWebsiteStack extends cdk.NestedStack {
   public readonly bucket: s3.Bucket;
@@ -14,7 +16,7 @@ export class S3StaticWebsiteStack extends cdk.NestedStack {
     super(scope, id, props);
 
     const s3BucketWebsite = new s3.Bucket(this, "ChatwaveWebsiteBuket", {
-      bucketName: "sudosam.com",
+      bucketName: props.bucketName,
       websiteIndexDocument: "index.html",
       publicReadAccess: true,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,

@@ -33,7 +33,7 @@ export const useAuth = () => {
             email: data.signInUserSession.idToken.payload.email,
             accessToken: data.signInUserSession.accessToken.jwtToken,
           });
-          if (pathname === "/login") {
+          if (pathname === "/login/") {
             router.replace("/dashboard");
           }
           break;

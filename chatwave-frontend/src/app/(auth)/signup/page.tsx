@@ -154,6 +154,7 @@ export default function Signup() {
                     <Link color={"blue.400"}>Forgot password?</Link>
                   </Stack> */}
                   <Button
+                    mt={2}
                     type="submit"
                     bg={"blue.400"}
                     color={"white"}
@@ -166,37 +167,14 @@ export default function Signup() {
                   </Button>
                 </Stack>
               </form>
-
-              <Divider />
-
-              <Button
-                bg={"red.400"}
-                color={"white"}
-                _hover={{
-                  bg: "red.500",
-                }}
-                isDisabled={isLoading}
-              >
-                Continue as Guest User
-              </Button>
-
-              <Button
-                type="button"
-                bg={"white.400"}
-                color={"black"}
-                variant="outline"
-                _hover={{
-                  bg: "gray.200",
-                }}
-                isDisabled={isLoading}
-              >
-                Continue with Google
-              </Button>
             </Stack>
           </Box>
 
           <Text fontSize={"lg"} color={"gray.600"} textAlign="center">
-            Already signed up? <Link color={"blue.400"}>Log in</Link>
+            Already signed up?{" "}
+            <Link color={"blue.400"} href="/login/">
+              Log in
+            </Link>
           </Text>
         </Stack>
       </Flex>
